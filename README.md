@@ -7,14 +7,14 @@ Bruno E. Farias - GRR20186715
 </p>
 
 ### Tarefas
-:link: [Tarefa 1](#tarefa-1):new:
-:link: [Tarefa 2](#tarefa-2)
+:new: [Tarefa 1](#tarefa-1)
+:soon: [Tarefa 2](#tarefa-2)
 
 
 ## Tarefa 1 :new:
 Contador de pacotes/sessões de um arquivo .pcap.
 
-:mag_right: [a relative link](conta_sessoes.py)
+:mag_right: [Ver arquivo conta_sessoes.py](conta_sessoes.py)
 
 ## Tarefa 2
 :soon:
