@@ -66,3 +66,5 @@ o valor dessas fraudes, o timestamp que ocorreram as fraudes, etc...
 
 Porém, como os significado dos valores V1 a V28 não são revelados, não é possível fazer análises a respeito
 das variações dos valores dessas colunas.
+
+:mag_right: [Ver arquivo tarefa3.py](tarefa3/tarefa3.py)
