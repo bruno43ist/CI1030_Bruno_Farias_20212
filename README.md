@@ -7,9 +7,9 @@ Bruno E. Farias - GRR20186715
 </p>
 
 ### Tarefas
-:new: [Tarefa 1](#tarefa-1)
+:point_right: [Tarefa 1](#tarefa-1)
 
-:soon: [Tarefa 2](#tarefa-2)
+:new: [Tarefa 2](#tarefa-2)
 
 
 ## Tarefa 1 :new:
