@@ -31,6 +31,11 @@ Dados:
 
 :receipt: Quantidades de Amostras: 284.807
 
+:arrow_right: Amostras COM Fraude: 492
+
+:arrow_right: Amostras SEM Fraude: 284315
+
+
 Classes:
 
 :clock1230: Time: quantidade de tempo em segundos que passou desde a primeira transação.
@@ -41,11 +46,6 @@ Classes:
 
 :warning: Class indica se houve fraude nessa transação (1 se houve, 0 caso contrário).
 
-Contagem:
-
-:arrow_right: Amostras COM Fraude: 492
-
-:arrow_right: Amostras SEM Fraude: 284315
 
 Scatterplot's:
 
