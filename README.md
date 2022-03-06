@@ -25,37 +25,38 @@ Contador de pacotes/sessões de um arquivo .pcap.
 :mag_right: [Ver arquivo Bruno_Farias.txt](tarefa2/Bruno_Farias.txt)
 
 ## Tarefa 3
-Repositório: Fraudes em Cartões de Crédito https://www.kaggle.com/samkirkiles/credit-card-fraud/data
+:credit_card: Repositório: Fraudes em Cartões de Crédito https://www.kaggle.com/samkirkiles/credit-card-fraud/data
 
 Dados:
 
-Quantidades de Amostras: 284807
+:receipt: Quantidades de Amostras: 284807
 
 Classes:
 
-Time: quantidade de tempo em segundos que passou desde a primeira transação.
+:clock1230: Time: quantidade de tempo em segundos que passou desde a primeira transação.
 
-V1-V28: componentes obtidos com Análise de Componentes Principais (PCA - Principal Component Analysis) a respeito das transações. (O significado desses campos não é revelado por motivos de segurança).
+:question: V1-V28: componentes obtidos com Análise de Componentes Principais (PCA - Principal Component Analysis) a respeito das transações. (O significado desses campos não é revelado por motivos de segurança).
 
-Amount é a quantia de dinheiro envolvida na transação.
+:euro: Amount é a quantia de dinheiro envolvida na transação.
 
-Class indica se houve fraude nessa transação (1 se houve, 0 caso contrário).
+:warning: Class indica se houve fraude nessa transação (1 se houve, 0 caso contrário).
 
-Amostras com Fraude: 492
 
-Amostras sem Frause: 284315
+:arrow_right:Amostras com Fraude: 492
+
+:arrow_right: Amostras sem Frause: 284315
 
 Scatterplot's:
 
-1) Fraudes por Amostras: indica se houve fraude ou não ao longo das amostras
+:one:) Fraudes por Amostras: indica se houve fraude ou não ao longo das amostras
 
 ![ver imagem](tarefa3/imagens/graf1.png)
 
-2) Valores por Fraudes: indica quantidade de frandes por faixa de valor fraudado
+:two:) Valores por Fraudes: indica quantidade de frandes por faixa de valor fraudado
 
 ![ver imagem](tarefa3/imagens/graf2.png)
 
-3) Tempo por Fraudes: indica quantidade de frandes por faixa de tempo de ocorrência da fraude
+:three:) Tempo por Fraudes: indica quantidade de frandes por faixa de tempo de ocorrência da fraude
 
 ![ver imagem](tarefa3/imagens/graf3.png)
 
