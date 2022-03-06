@@ -1,0 +1,19 @@
+https://github.com/bruno43ist/CI1030_Bruno_Farias_20212.git
+
+Possíveis Datasets:
+
+Fraudes em Cartões de Crédito
+https://www.kaggle.com/samkirkiles/credit-card-fraud/data
+Ocorre com grande frenquência no Brasil; já ocorreu uma situação comigo; interesse em saber valor total proveniente de fraudes;
+
+URL's maliciosas
+http://www.sysnet.ucsd.edu/projects/url/
+Fácil de "cair"; muitas vezes passa despercebido; segurança dos futuros sistemas a serem desenvolvidos;
+
+Malwares em PDF's
+https://www.unb.ca/cic/datasets/pdfmal-2022.html
+Fácil de "cair"; acessado em larga escala no mundo; atrai olhares de cibercriminosos.
+
+Malwares no Android
+https://www.unb.ca/cic/datasets/maldroid-2020.html
+Sistema utilizado em larga escala; usuários finais podem nem perceber as ações dos ataques; grande quantidade de maneiras possíveis de sofrer/realizar ataques;
