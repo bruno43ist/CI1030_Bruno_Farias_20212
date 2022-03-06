@@ -29,7 +29,7 @@ Contador de pacotes/sessões de um arquivo .pcap.
 
 Dados:
 
-:receipt: Quantidades de Amostras: 284807
+:receipt: Quantidades de Amostras: 284.807
 
 Classes:
 
@@ -41,10 +41,11 @@ Classes:
 
 :warning: Class indica se houve fraude nessa transação (1 se houve, 0 caso contrário).
 
+Contagem:
 
-:arrow_right:Amostras com Fraude: 492
+:arrow_right: Amostras COM Fraude: 492
 
-:arrow_right: Amostras sem Frause: 284315
+:arrow_right: Amostras SEM Fraude: 284315
 
 Scatterplot's:
 
