@@ -81,3 +81,4 @@ Vetor de características: [‘Time’, 'V1', 'V2', 'V3', 'V4', 'V5', 'V6', 'V7'
 ![ver imagem](tarefa4/imagens/graf.png)
 
 :mag_right: [Ver arquivo tarefa4.py](tarefa4/tarefa4.py)
+:mag_right: [Ver relatório relatorio.pdf](tarefa4/relatorio.pdf)
