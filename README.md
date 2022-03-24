@@ -9,9 +9,11 @@ Bruno E. Farias - GRR20186715
 ### Tarefas
 :point_right: [Tarefa 1](#tarefa-1)
 
-:new: [Tarefa 2](#tarefa-2)
+:point_right: [Tarefa 2](#tarefa-2)
 
-:new: [Tarefa 3](#tarefa-3)
+:point_right: [Tarefa 3](#tarefa-3)
+
+:new: [Tarefa 4](#tarefa-4)
 
 
 ## Tarefa 1 :new:
@@ -68,3 +70,14 @@ Porém, como os significado dos valores V1 a V28 não são revelados, não é po
 das variações dos valores dessas colunas.
 
 :mag_right: [Ver arquivo tarefa3.py](tarefa3/tarefa3.py)
+
+## Tarefa 4
+Vetor de Características e Distribuição do conjunto de dados
+
+Vetor de características: [‘Time’, 'V1', 'V2', 'V3', 'V4', 'V5', 'V6', 'V7', 'V8', 'V9', 'V10', 'V11', 'V12', 'V13', 'V14', 'V15', 'V16', 'V17', 'V18', 'V19', 'V20', 'V21', 'V22', 'V23', 'V24', 'V25', 'V26', 'V27', 'V28', 'Amount', ‘Class’]
+
+É um problema binário: fraude ou não fraude
+
+![ver imagem](tarefa4/imagens/graf.png)
+
+:mag_right: [Ver arquivo tarefa4.py](tarefa4/tarefa4.py)
