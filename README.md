@@ -88,6 +88,18 @@ Vetor de características: [‘Time’, 'V1', 'V2', 'V3', 'V4', 'V5', 'V6', 'V7'
 
 ## Tarefa 4
 
+Cada aluno deverá apresentar o estado atual do seu projeto, mostrando e discutindo:
+
+O dataset como um todo atributos, características, classes, amostrasdistribuição de classes
+Processamento dos dados
+Como foi feita a extração de características
+Foi feito seleção?
+Exploração e visualização de dados
+Mostrar o diagrama de dispersão (scatterplot)
+Mostrar visualmente o agrupamento de seu dataset com algum algoritmo de clustering
+Sugestão: K-Means (mas pode usar outro, como DBScan)
+Usar como número de cluster o número de classes do seu problema (se for binário, K=2)
+
 ![ver imagem](tarefa4/imagens/cluster_oficial.png)
 
 :mag_right: [Ver arquivo clustering_v4.py](tarefa4/clustering_v4.py)
