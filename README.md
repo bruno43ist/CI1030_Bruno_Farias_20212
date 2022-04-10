@@ -81,9 +81,9 @@ Vetor de características: [‘Time’, 'V1', 'V2', 'V3', 'V4', 'V5', 'V6', 'V7'
 
 É um problema binário: fraude ou não fraude
 
-![ver imagem](tarefa4/imagens/graf.png)
+![ver imagem](entrega_aula_8/imagens/graf.png)
 
-:mag_right: [Ver arquivo tarefa4.py](tarefa4/tarefa4.py)
-:mag_right: [Ver relatório relatorio.pdf](tarefa4/relatorio.pdf)
+:mag_right: [Ver arquivo tarefa4.py](entrega_aula_8/codigo.py)
+:mag_right: [Ver relatório relatorio.pdf](entrega_aula_8/relatorio.pdf)
 
 ## Tarefa 4
