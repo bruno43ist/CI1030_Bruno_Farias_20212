@@ -83,7 +83,7 @@ Vetor de características: [‘Time’, 'V1', 'V2', 'V3', 'V4', 'V5', 'V6', 'V7'
 
 ![ver imagem](entrega_aula_8/imagens/graf.png)
 
-:mag_right: [Ver arquivo tarefa4.py](entrega_aula_8/codigo.py)
+:mag_right: [Ver arquivo codigo.py](entrega_aula_8/codigo.py)
 :mag_right: [Ver relatório relatorio.pdf](entrega_aula_8/relatorio.pdf)
 
 ## Tarefa 4
