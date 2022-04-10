@@ -87,3 +87,8 @@ Vetor de características: [‘Time’, 'V1', 'V2', 'V3', 'V4', 'V5', 'V6', 'V7'
 :mag_right: [Ver relatório relatorio.pdf](entrega_aula_8/relatorio.pdf)
 
 ## Tarefa 4
+
+![ver imagem](tarefa4/imagens/clusters.png)
+
+:mag_right: [Ver arquivo clustering_v4.py](tarefa4/clustering_v4.py)
+:mag_right: [Ver relatório Tarefa_4_bruno.pptx](tarefa4/Tarefa_4_bruno.pptx)
