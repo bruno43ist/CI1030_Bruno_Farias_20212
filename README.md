@@ -13,6 +13,8 @@ Bruno E. Farias - GRR20186715
 
 :point_right: [Tarefa 3](#tarefa-3)
 
+:point_right: [Entrega da aula 8](#entrega-da-aula-8)
+
 :new: [Tarefa 4](#tarefa-4)
 
 
@@ -71,7 +73,8 @@ das variações dos valores dessas colunas.
 
 :mag_right: [Ver arquivo tarefa3.py](tarefa3/tarefa3.py)
 
-## Tarefa 4
+## Entrega da aula 8
+
 Vetor de Características e Distribuição do conjunto de dados
 
 Vetor de características: [‘Time’, 'V1', 'V2', 'V3', 'V4', 'V5', 'V6', 'V7', 'V8', 'V9', 'V10', 'V11', 'V12', 'V13', 'V14', 'V15', 'V16', 'V17', 'V18', 'V19', 'V20', 'V21', 'V22', 'V23', 'V24', 'V25', 'V26', 'V27', 'V28', 'Amount', ‘Class’]
@@ -82,3 +85,5 @@ Vetor de características: [‘Time’, 'V1', 'V2', 'V3', 'V4', 'V5', 'V6', 'V7'
 
 :mag_right: [Ver arquivo tarefa4.py](tarefa4/tarefa4.py)
 :mag_right: [Ver relatório relatorio.pdf](tarefa4/relatorio.pdf)
+
+## Tarefa 4
