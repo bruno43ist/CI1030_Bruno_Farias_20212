@@ -121,6 +121,10 @@ acurácia: 0.999
 
 recall: 0.838
 
+![ver imagem](classificacao/matriz_conf_2_random_forest.png)
+![ver imagem](classificacao/matriz_conf_2_random_forest_porcentagem.png)
+![ver imagem](classificacao/console_RandomForest.png)
+
 
 :arrow_right: KNN
 
@@ -133,5 +137,11 @@ tempo: 273 segundos
 acurácia: 0.999
 
 recall: 0.804
+
+![ver imagem](classificacao/matriz_conf_2_KNN.png)
+![ver imagem](classificacao/matriz_conf_2_KNN_porcentagem.png)
+![ver imagem](classificacao/console_KNN.png)
+
+:mag_right: [Ver arquivo classification.py](classificacao/classification.py)
 
 
