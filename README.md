@@ -107,20 +107,20 @@ Usar como número de cluster o número de classes do seu problema (se for binár
 :mag_right: [Ver arquivo clustering_v4.py](tarefa4/clustering_v4.py)
 :mag_right: [Ver relatório Tarefa_4_bruno.pptx](tarefa4/Tarefa_4_bruno.pptx)
 
-## Tarefa 4
+## Classificação
 
-Random Forest
+:arrow_right: Random Forest
 
-: arrow_right: 70% treino e 30% testes
+70% treino e 30% testes
 
-:arrow_right: n_estimators = 100;
+n_estimators = 100;
 
-:arrow_right: tempo: 149 segundos
+tempo: 149 segundos
 
-KNN
+:arrow_right: KNN
 
-:arrow_right: 70% treino e 30% testes
+70% treino e 30% testes
 
-:arrow_right: 5 vizinhos
+5 vizinhos
 
 
