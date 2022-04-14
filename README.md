@@ -15,10 +15,12 @@ Bruno E. Farias - GRR20186715
 
 :point_right: [Entrega da aula 8](#entrega-da-aula-8)
 
-:new: [Tarefa 4](#tarefa-4)
+:point_right: [Tarefa 4](#tarefa-4)
+
+:new: [Classificação](#classificação)
 
 
-## Tarefa 1 :new:
+## Tarefa 1 
 Contador de pacotes/sessões de um arquivo .pcap.
 
 :mag_right: [Ver arquivo conta_sessoes.py](tarefa1/conta_sessoes.py)
@@ -104,3 +106,21 @@ Usar como número de cluster o número de classes do seu problema (se for binár
 
 :mag_right: [Ver arquivo clustering_v4.py](tarefa4/clustering_v4.py)
 :mag_right: [Ver relatório Tarefa_4_bruno.pptx](tarefa4/Tarefa_4_bruno.pptx)
+
+## Tarefa 4
+
+Random Forest
+
+: arrow_right: 70% treino e 30% testes
+
+:arrow_right: n_estimators = 100;
+
+:arrow_right: tempo: 149 segundos
+
+KNN
+
+:arrow_right: 70% treino e 30% testes
+
+:arrow_right: 5 vizinhos
+
+
