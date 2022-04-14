@@ -117,10 +117,21 @@ n_estimators = 100;
 
 tempo: 149 segundos
 
+acurácia: 0.999
+
+recall: 0.838
+
+
 :arrow_right: KNN
 
 70% treino e 30% testes
 
 5 vizinhos
+
+tempo: 273 segundos
+
+acurácia: 0.999
+
+recall: 0.804
 
 
