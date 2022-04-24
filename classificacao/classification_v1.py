@@ -21,350 +21,398 @@ from sklearn.metrics import confusion_matrix,accuracy_score,recall_score,precisi
 from sklearn.utils import resample, shuffle
 
 def load_data(nome_arquivo, drop_label):
-	input_data = pd.read_csv(nome_arquivo)
+  input_data = pd.read_csv(nome_arquivo)
 
-	row, col = input_data.shape
-	logging.info(f'Linhas: {row} Colunas: {col}') 
-	logging.info(input_data.head(10))
+  row, col = input_data.shape
+  logging.info(f'Linhas: {row} Colunas: {col}') 
+  logging.info(input_data.head(10))
 
-	#salva a classificação
-	y = input_data['Class'].tolist()
+  #salva a classificação
+  y = input_data['Class'].tolist()
 
 
 
-	#remove a classificação (col Class)
-	if drop_label == 1:
-		input_data = input_data.drop('Class', axis = 1)
-		logging.info('Após drops: ')
-		logging.info(input_data.head(10))	
+  #remove a classificação (col Class)
+  if drop_label == 1:
+    input_data = input_data.drop('Class', axis = 1)
+    logging.info('Após drops: ')
+    logging.info(input_data.head(10)) 
 
-	input_data_scaled = input_data.copy()
+  input_data_scaled = input_data.copy()
 
-	#normalizando dados
-	#logging.info('Normalizando...')
-	#input_data_scaled[input_data_scaled.columns] = StandardScaler().fit_transform(input_data_scaled)
+  #normalizando dados
+  #logging.info('Normalizando...')
+  #input_data_scaled[input_data_scaled.columns] = StandardScaler().fit_transform(input_data_scaled)
 
-	#logging.info(input_data_scaled.describe())
+  #logging.info(input_data_scaled.describe())
 
-	return input_data_scaled, y
+  return input_data_scaled, y
 
 
 
 
 
 def plot_matriz_conf(cm, alg):
-	ax = sns.heatmap(cm, annot=True, cmap='Blues')
+  ax = sns.heatmap(cm, annot=True, cmap='Blues')
 
-	ax.set_title('Matriz de confusão')
-	ax.set_xlabel('Valores previstos')
-	ax.set_ylabel('Valores atuais')
+  ax.set_title('Matriz de confusão')
+  ax.set_xlabel('Valores previstos')
+  ax.set_ylabel('Valores atuais')
 
-	ax.xaxis.set_ticklabels(['False', 'True'])
-	ax.yaxis.set_ticklabels(['False', 'True'])
+  ax.xaxis.set_ticklabels(['False', 'True'])
+  ax.yaxis.set_ticklabels(['False', 'True'])
 
-	#plt.show()
-	nomeFig1 = 'matriz_conf_'+alg+'.png'
-	plt.savefig(nomeFig1)
-	logging.info('Salvo em ' + nomeFig1)
+  #plt.show()
+  nomeFig1 = 'matriz_conf_'+alg+'.png'
+  plt.savefig(nomeFig1)
+  logging.info('Salvo em ' + nomeFig1)
 
-	ax = sns.heatmap(cm/np.sum(cm), annot=True, fmt='.2%', cmap='Blues')
+  #limpa a figura para não plotar uma em cima da outra
+  plt.clf()
 
-	ax.set_title('Matriz de confusão')
-	ax.set_xlabel('Valores previstos')
-	ax.set_ylabel('Valores atuais')
+  ax = sns.heatmap(cm/np.sum(cm), annot=True, fmt='.2%', cmap='Blues')
 
-	ax.xaxis.set_ticklabels(['False', 'True'])
-	ax.yaxis.set_ticklabels(['False', 'True'])
+  ax.set_title('Matriz de confusão')
+  ax.set_xlabel('Valores previstos')
+  ax.set_ylabel('Valores atuais')
 
-	#plt.show()
+  ax.xaxis.set_ticklabels(['False', 'True'])
+  ax.yaxis.set_ticklabels(['False', 'True'])
 
-	nomeFig2 = 'matriz_conf_porc_'+alg+'.png'
-	plt.savefig(nomeFig2)
-	logging.info('Salvo em ' + nomeFig2)
+  #plt.show()
+
+  nomeFig2 = 'matriz_conf_porc_'+alg+'.png'
+  plt.savefig(nomeFig2)
+  logging.info('Salvo em ' + nomeFig2)
+
+  #limpa a figura para não plotar uma em cima da outra
+  plt.clf()
 
 
 
 def resample_f(data):
-	logging.info('Fazendo resample dos dados...')
+  logging.info('Fazendo resample dos dados...')
 
-	#separa a classe de minoria (fraude) em um dataframe diferente
-	df_1 = data[data['Class'] == 1]
+  #separa a classe de minoria (fraude) em um dataframe diferente
+  df_1 = data[data['Class'] == 1]
 
-	logging.info('df_1>')
-	logging.info(df_1.head(10))
+  logging.info('df_1>')
+  logging.info(df_1.head(10))
 
-	#separa a classe de maioria (não fraude) em um dataframe diferente
-	other_df = data[data['Class'] != 1]
+  #separa a classe de maioria (não fraude) em um dataframe diferente
+  other_df = data[data['Class'] != 1]
 
-	logging.info('other_df>')
-	logging.info(other_df.head(10))
+  logging.info('other_df>')
+  logging.info(other_df.head(10))
 
-	#upsample a classe de minoria -> 1 amostra fraude para cada 5 amostras não fraude
-	#df_1_upsampled = resample(df_1, n_samples=5*len(other_df), replace=True)
-	df_1_upsampled = resample(df_1, n_samples=int(len(other_df)/5))
+  #upsample a classe de minoria -> 1 amostra fraude para cada 5 amostras não fraude
+  #df_1_upsampled = resample(df_1, n_samples=5*len(other_df), replace=True)
+  df_1_upsampled = resample(df_1, n_samples=int(len(other_df)/5))
 
-	#concatena o dataframe upsampled
-	df_1_upsampled = pd.concat([df_1_upsampled, other_df])
+  #concatena o dataframe upsampled
+  df_1_upsampled = pd.concat([df_1_upsampled, other_df])
 
-	#reseta index
-	df_1_upsampled = df_1_upsampled.reset_index()
+  #reseta index
+  df_1_upsampled = df_1_upsampled.reset_index()
 
-	#tira o index
-	df_1_upsampled.drop(['index'], axis=1, inplace=True)
-	
-	logging.info('df_1_upsampled>')
-	logging.info(df_1_upsampled.head(10))
+  #tira o index
+  df_1_upsampled.drop(['index'], axis=1, inplace=True)
+  
+  logging.info('df_1_upsampled>')
+  logging.info(df_1_upsampled.head(10))
 
-	logging.info('df_1_upsampled>')
-	logging.info(df_1_upsampled)
+  logging.info('df_1_upsampled>')
+  logging.info(df_1_upsampled)
 
-	d1_fraude_end = df_1_upsampled[df_1_upsampled['Class'] == 1]
-	d1_nao_fraude_end = df_1_upsampled[df_1_upsampled['Class'] != 1]
+  d1_fraude_end = df_1_upsampled[df_1_upsampled['Class'] == 1]
+  d1_nao_fraude_end = df_1_upsampled[df_1_upsampled['Class'] != 1]
 
-	logging.info('Total de amostras SEM fraude: {}'.format(len(d1_nao_fraude_end)))
-	logging.info('Total de amostras COM fraude: {}'.format(len(d1_fraude_end)))
+  logging.info('Total de amostras SEM fraude: {}'.format(len(d1_nao_fraude_end)))
+  logging.info('Total de amostras COM fraude: {}'.format(len(d1_fraude_end)))
 
-	#salva as classificaçoes
-	targets = df_1_upsampled['Class']
+  #salva as classificaçoes
+  targets = df_1_upsampled['Class']
 
-	#tira as classificacoes
-	df_1_upsampled.drop(['Class'], axis=1, inplace=True)
+  #tira as classificacoes
+  df_1_upsampled.drop(['Class'], axis=1, inplace=True)
 
-	logging.info('Ao final de resample: df_1_upsampled>')
-	logging.info(df_1_upsampled.head(10))
+  logging.info('Ao final de resample: df_1_upsampled>')
+  logging.info(df_1_upsampled.head(10))
 
-	logging.info('Final do resample!')
+  logging.info('Final do resample!')
 
-	return df_1_upsampled, targets
+  return df_1_upsampled, targets
 
 #roda o GridSearchCV para encontrar o melhor classificador de acordo com o tipo de métrica escolhido
 def grid_search_wrapper(clf, param_grid, scorers, X_train, X_test, y_train, y_test, refit_score='precision_score'):
-	skf = StratifiedKFold(n_splits=10) #K-fold
+  skf = StratifiedKFold(n_splits=10) #K-fold
 
-	#estimator = clf
-	#param_grid = parâmetros de classificaçao definidos pelo usuário
-	#scoring = estratégias definidas pelo usuário para avaliar a performance dos modelos
-	#refit = reajusta um classificador utilizando os melhores parametros do dataset
-	#cv = estratégia de separação da validação em cruz	
-	grid_search = GridSearchCV(clf, param_grid, scoring=scorers, refit=refit_score, cv=skf, return_train_score=True, n_jobs=-1)
+  #estimator = clf
+  #param_grid = parâmetros de classificaçao definidos pelo usuário
+  #scoring = estratégias definidas pelo usuário para avaliar a performance dos modelos
+  #refit = reajusta um classificador utilizando os melhores parametros do dataset
+  #cv = estratégia de separação da validação em cruz  
+  grid_search = GridSearchCV(clf, param_grid, scoring=scorers, refit=refit_score, cv=skf, return_train_score=True, n_jobs=-1)
 
-	#treina os modelos
-	grid_search.fit(X_train, y_train)
+  #treina os modelos
+  grid_search.fit(X_train, y_train)
 
-	#faz as predições
-	y_pred = grid_search.predict(X_test)
+  #faz as predições
+  y_pred = grid_search.predict(X_test)
 
-	logging.info('Melhores parâmetros para {}'.format(refit_score))
-	logging.info(grid_search.best_params_)
+  logging.info('Melhores parâmetros para {}'.format(refit_score))
+  logging.info(grid_search.best_params_)
 
-	logging.info('Matriz de confusão para os dados de teste: ')
-	logging.info(pd.DataFrame(confusion_matrix(y_test, y_pred), columns=['pred_neg', 'pred_pos'], index=['neg','pos']))
+  logging.info('Matriz de confusão para os dados de teste: ')
+  logging.info(pd.DataFrame(confusion_matrix(y_test, y_pred), columns=['pred_neg', 'pred_pos'], index=['neg','pos']))
 
-	return grid_search
+  return grid_search
 
 def randomForest2(data, targets, ajusteLimiar=True):
-	logging.info('')
-	logging.info('')
-	logging.info('')
-	logging.info('')
-	logging.info('')
-	logging.info('Fazendo RandomForest (novo)')
+  logging.info('')
+  logging.info('')
+  logging.info('')
+  logging.info('')
+  logging.info('')
+  logging.info('Fazendo RandomForest (novo)')
 
-	inicio = datetime.datetime.now();
+  inicio = datetime.datetime.now();
 
-	#dividir o dataset entre treinamento e validação
-	logging.info('Separando dataset em teste e treinamento...')
-	X_train, X_test, y_train, y_test = train_test_split(data, targets, stratify=targets)
+  #dividir o dataset entre treinamento e validação
+  logging.info('Separando dataset em teste e treinamento...')
+  X_train, X_test, y_train, y_test = train_test_split(data, targets, stratify=targets)
 
-	logging.info('======= Distribuiçao de classes (y_train) ===========')
-	logging.info(y_train.value_counts(normalize=True))
-	logging.info('')
-	logging.info(y_train.value_counts())
-	logging.info('======= Distribuiçao de classes (y_test) ===========')
-	logging.info(y_test.value_counts(normalize=True))
-	logging.info('')
-	logging.info(y_test.value_counts())
+  logging.info('======= Distribuiçao de classes (y_train) ===========')
+  logging.info(y_train.value_counts(normalize=True))
+  logging.info('')
+  logging.info(y_train.value_counts())
+  logging.info('======= Distribuiçao de classes (y_test) ===========')
+  logging.info(y_test.value_counts(normalize=True))
+  logging.info('')
+  logging.info(y_test.value_counts())
 
-	#normalizando as amostras
-	logging.info('Normalizando as amostras...')
-	sc = StandardScaler()
-	X_train = sc.fit_transform(X_train)
-	X_test = sc.transform(X_test)
+  #normalizando as amostras
+  logging.info('Normalizando as amostras...')
+  sc = StandardScaler()
+  X_train = sc.fit_transform(X_train)
+  X_test = sc.transform(X_test)
 
-	best_n_estimators = 10
-	best_min_samples_split = 5
-	best_max_depth = 15
-	best_max_features = 8
+  best_n_estimators = 10
+  best_min_samples_split = 5
+  best_max_depth = 15
+  best_max_features = 8
 
-	if ajusteLimiar:
-		#fazendo ajuste de limiar de decisão
-		logging.info('Rodando ajuste de limiar...')
+  if ajusteLimiar:
+    #fazendo ajuste de limiar de decisão
+    logging.info('Rodando ajuste de limiar...')
 
-		#(100 árvores e todos os processadores/núcleos)
-		clf=RandomForestClassifier(n_jobs=-1)
+    #(100 árvores e todos os processadores/núcleos)
+    clf=RandomForestClassifier(n_jobs=-1)
 
-		param_grid = {
-			'min_samples_split': [3, 5], #número mínimo de amostras necessárias para dividir um nó interno
-			'n_estimators': [50, 100], #número de árvores
-			'max_depth': [3, 15], #altura máxima da árvore
-			'max_features': [5, 8] #número de atributos a considerar quando procurar a melhor divisão
-		}
+    param_grid = {
+      'min_samples_split': [3, 5], #número mínimo de amostras necessárias para dividir um nó interno
+      'n_estimators': [50, 100], #número de árvores
+      'max_depth': [3, 15], #altura máxima da árvore
+      'max_features': [5, 8] #número de atributos a considerar quando procurar a melhor divisão
+    }
 
-		#apenas para acelerar os testes
-		# param_grid = {
-		# 	'min_samples_split': [3, 5], #número mínimo de amostras necessárias para dividir um nó interno
-		#  	'n_estimators': [5, 10], #número de árvores
-		# }
+    #apenas para acelerar os testes
+    # param_grid = {
+    #   'min_samples_split': [3, 5], #número mínimo de amostras necessárias para dividir um nó interno
+    #   'n_estimators': [5, 10], #número de árvores
+    # }
 
-		scorers = {
-			'precision_score': make_scorer(precision_score), #habilidade de não classificar como positivo uma amostra que é negativa
-			'recall_score': make_scorer(recall_score), #habilidade de encontrar todas as amostras positivas
-			'accuracy_score': make_scorer(accuracy_score) # fração das previsões que o modelo acertou
-		}
+    scorers = {
+      'precision_score': make_scorer(precision_score), #habilidade de não classificar como positivo uma amostra que é negativa
+      'recall_score': make_scorer(recall_score), #habilidade de encontrar todas as amostras positivas
+      'accuracy_score': make_scorer(accuracy_score) # fração das previsões que o modelo acertou
+    }
 
-		inicioGridSearch = datetime.datetime.now();
+    inicioGridSearch = datetime.datetime.now();
 
-		grid_search_clf = grid_search_wrapper(clf, param_grid, scorers, X_train, X_test, y_train, y_test, refit_score='precision_score')
+    grid_search_clf = grid_search_wrapper(clf, param_grid, scorers, X_train, X_test, y_train, y_test, refit_score='precision_score')
 
-		best_n_estimators = grid_search_clf.best_params_['n_estimators']
-		logging.info('Melhor n_estimators: {}'.format(best_n_estimators))
+    best_n_estimators = grid_search_clf.best_params_['n_estimators']
+    logging.info('Melhor n_estimators: {}'.format(best_n_estimators))
 
-		best_min_samples_split = grid_search_clf.best_params_['min_samples_split']
-		logging.info('Melhor min_samples_split: {}'.format(best_min_samples_split))
+    best_min_samples_split = grid_search_clf.best_params_['min_samples_split']
+    logging.info('Melhor min_samples_split: {}'.format(best_min_samples_split))
 
-		finalGridSearch = datetime.datetime.now();
-		tempoPassadoGridSearch = finalGridSearch - inicioGridSearch
-		logging.info('Tempo passado: %d microsegundos | %d segundos' % (tempoPassadoGridSearch.microseconds, tempoPassadoGridSearch.seconds))
+    best_max_depth = grid_search_clf.best_params_['max_depth']
+    logging.info('Melhor max_depth: {}'.format(best_max_depth))
+
+    best_max_features = grid_search_clf.best_params_['max_features']
+    logging.info('Melhor max_features: {}'.format(best_max_features))
+
+    finalGridSearch = datetime.datetime.now();
+    tempoPassadoGridSearch = finalGridSearch - inicioGridSearch
+    logging.info('Tempo passado: %d microsegundos | %d segundos' % (tempoPassadoGridSearch.microseconds, tempoPassadoGridSearch.seconds))
 
 
-	logging.info('Rodando randomForest para as configuracoes escolhidas...')
-	
-	#clf=RandomForestClassifier(n_estimators=best_n_estimators, min_samples_split=best_min_samples_split, max_depth=best_max_depth, max_features=best_max_features, n_jobs=-1)
-	clf=RandomForestClassifier(n_estimators=10, min_samples_split=3, n_jobs=-1)
+  logging.info('Rodando randomForest para as configuracoes escolhidas...')
+  
+  clf=RandomForestClassifier(n_estimators=best_n_estimators, min_samples_split=best_min_samples_split, max_depth=best_max_depth, max_features=best_max_features, n_jobs=-1)
+  #clf=RandomForestClassifier(n_estimators=10, min_samples_split=3, n_jobs=-1)
 
-	#treinar o modelo usando os sets y_pred=clf.predict(X_test)
-	clf.fit(X_train,y_train)
+  #treinar o modelo usando os sets y_pred=clf.predict(X_test)
+  clf.fit(X_train,y_train)
 
-	y_pred=clf.predict(X_test)
+  y_pred=clf.predict(X_test)
 
-	final = datetime.datetime.now();
+  final = datetime.datetime.now();
 
-	tempoPassado = final - inicio
+  tempoPassado = final - inicio
 
-	logging.info('Tempo passado: %d microsegundos | %d segundos' % (tempoPassado.microseconds, tempoPassado.seconds))
+  logging.info('Tempo passado: %d microsegundos | %d segundos' % (tempoPassado.microseconds, tempoPassado.seconds))
 
-	#matriz de confusão
-	cm = confusion_matrix(y_test, y_pred)
+  #matriz de confusão
+  cm = confusion_matrix(y_test, y_pred)
 
-	logging.info("Confusion Matrix:")
-	logging.info(cm)
+  logging.info("Confusion Matrix:")
+  logging.info(cm)
 
-	#métrica de acurácia
-	ac = accuracy_score(y_test,y_pred)
+  #métrica de acurácia
+  ac = accuracy_score(y_test,y_pred)
 
-	logging.info("Accuracy score:")
-	print (ac)
+  logging.info("Accuracy score:")
+  print (ac)
 
-	#recall
-	rc = recall_score(y_test, y_pred)
+  #recall
+  rc = recall_score(y_test, y_pred)
 
-	logging.info("Recall:")
-	logging.info(rc)
+  logging.info("Recall:")
+  logging.info(rc)
 
-	plot_matriz_conf(cm, 'RF')
+  plot_matriz_conf(cm, 'RF')
 
-def knn(data):
+def knn(data, targets, ajusteLimiar):
 
-	logging.info('\n\n\n\n\n\nFazendo KNN')
+  logging.info('')
+  logging.info('')
+  logging.info('')
+  logging.info('')
+  logging.info('')
+  logging.info('Fazendo KNN (novo)')
 
-	logging.info(data.head(10))
+  inicio = datetime.datetime.now();
 
-	X = data.iloc[:,30].values
-	y = data.iloc[:,30].values
-	logging.info('X:')
-	logging.info(X)
-	logging.info('y:')
-	logging.info(y)
+  #dividir o dataset entre treinamento e validação
+  logging.info('Separando dataset em teste e treinamento...')
+  X_train, X_test, y_train, y_test = train_test_split(data, targets, stratify=targets)
 
-	
+  logging.info('======= Distribuiçao de classes (y_train) ===========')
+  logging.info(y_train.value_counts(normalize=True))
+  logging.info('')
+  logging.info(y_train.value_counts())
+  logging.info('======= Distribuiçao de classes (y_test) ===========')
+  logging.info(y_test.value_counts(normalize=True))
+  logging.info('')
+  logging.info(y_test.value_counts())
 
-	logging.info('Iniciando knn...')
+  #normalizando as amostras
+  logging.info('Normalizando as amostras...')
+  sc = StandardScaler()
+  X_train = sc.fit_transform(X_train)
+  X_test = sc.transform(X_test)
 
-	inicio = datetime.datetime.now();
+  best_n_neighbors = 5;
 
-	#dividir o dataset entre treinamento e validação
-	#X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3) # 70% treinamento and 30% testes
+  if ajusteLimiar:
+    #fazendo ajuste de limiar de decisão
+    logging.info('Rodando ajuste de limiar...')
 
-	#separar o dataset com distribuiçao equivalente das classes
-	X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y) # 70% treinamento and 30% testes
+    #(100 árvores e todos os processadores/núcleos)
+    clf=KNeighborsClassifier(n_jobs=-1)
 
-	#normalizando as amostras
-	sc = StandardScaler()
-	X_train = sc.fit_transform(X_train)
-	X_test = sc.transform(X_test)
+    param_grid = {
+      'n_neighbors': [1, 3, 5], #número de vizinhos
+    }
 
-	#aplica o KNN com 5 vizinhos
-	#classifier = KNeighborsClassifier(n_neighbors = 5, metric = 'minkowski', p = 2)
-	classifier = KNeighborsClassifier(n_neighbors = 5)
-	classifier.fit(X_train, y_train)
+    #apenas para acelerar os testes
+    # param_grid = {
+    #   'n_neighbors': [1], #número de vizinhos
+    # }
 
-	#testar com os 30% separados para teste
-	y_pred = classifier.predict(X_test)
+    scorers = {
+      'precision_score': make_scorer(precision_score), #habilidade de não classificar como positivo uma amostra que é negativa
+      'recall_score': make_scorer(recall_score), #habilidade de encontrar todas as amostras positivas
+      'accuracy_score': make_scorer(accuracy_score) # fração das previsões que o modelo acertou
+    }
 
-	final = datetime.datetime.now();
+    inicioGridSearch = datetime.datetime.now();
 
-	tempoPassado = final - inicio
+    grid_search_clf = grid_search_wrapper(clf, param_grid, scorers, X_train, X_test, y_train, y_test, refit_score='precision_score')
 
-	logging.info('Tempo passado: %d microsegundos | %d segundos' % (tempoPassado.microseconds, tempoPassado.seconds))
+    best_n_neighbors = grid_search_clf.best_params_['n_neighbors']
+    logging.info('Melhor n_neighbors: {}'.format(best_n_neighbors))
 
-	#matriz de confusão
-	cm = confusion_matrix(y_test, y_pred)
+    finalGridSearch = datetime.datetime.now();
+    tempoPassadoGridSearch = finalGridSearch - inicioGridSearch
+    logging.info('Tempo passado: %d microsegundos | %d segundos' % (tempoPassadoGridSearch.microseconds, tempoPassadoGridSearch.seconds))
 
-	logging.info("Confusion Matrix:")
-	logging.info(cm)
 
-	#métrica de acurácia
-	ac = accuracy_score(y_test,y_pred)
+  #aplica o KNN com a melhor quantidade de vizinhos q o ajuste definiu
+  #classifier = KNeighborsClassifier(n_neighbors = 5, metric = 'minkowski', p = 2)
+  classifier = KNeighborsClassifier(n_neighbors = best_n_neighbors)
+  classifier.fit(X_train, y_train)
 
-	logging.info("Accuracy score:")
-	print (ac)
+  #testar com os 30% separados para teste
+  y_pred = classifier.predict(X_test)
 
-	#recall
-	rc = recall_score(y_test, y_pred)
+  final = datetime.datetime.now();
 
-	logging.info("Recall:")
-	logging.info(rc)
+  tempoPassado = final - inicio
 
-	plot_matriz_conf(cm, 'KNN')
-	
+  logging.info('Tempo passado: %d microsegundos | %d segundos' % (tempoPassado.microseconds, tempoPassado.seconds))
+
+  #matriz de confusão
+  cm = confusion_matrix(y_test, y_pred)
+
+  logging.info("Confusion Matrix:")
+  logging.info(cm)
+
+  #métrica de acurácia
+  ac = accuracy_score(y_test,y_pred)
+
+  logging.info("Accuracy score:")
+  print (ac)
+
+  #recall
+  rc = recall_score(y_test, y_pred)
+
+  logging.info("Recall:")
+  logging.info(rc)
+
+  plot_matriz_conf(cm, 'KNN')
+  
 
 
 def exporacao():
-	logging.basicConfig(
-		level=logging.INFO,
-		format="%(asctime)s [%(funcName)s()] %(message)s",
-		handlers=[
-			logging.FileHandler("debug.log"),
-			logging.StreamHandler()
-		]
-	)
-	logging.info('Iniciando exploração do dataset...')
+  logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(funcName)s()] %(message)s",
+    handlers=[
+      logging.FileHandler("debug.log"),
+      logging.StreamHandler()
+    ]
+  )
+  logging.info('Iniciando exploração do dataset...')
 
-	#abrindo dataset que veio pelo sys.argv[1]
-	nome_arquivo = sys.argv[1]
+  #abrindo dataset que veio pelo sys.argv[1]
+  nome_arquivo = sys.argv[1]
 
-	logging.info('1. Lendo dados %s...' % (nome_arquivo))
-	data_scaled, y = load_data(nome_arquivo, 0)
+  logging.info('1. Lendo dados %s...' % (nome_arquivo))
+  data_scaled, y = load_data(nome_arquivo, 0)
 
-	#resample
-	logging.info('2. Fazendo resample...')
-	data_scaled, targets = resample_f(data_scaled)
+  #resample
+  logging.info('2. Fazendo resample...')
+  data_scaled, targets = resample_f(data_scaled)
 
-	logging.info('3. Fazendo RandomForest...')
-	randomForest2(data_scaled, targets, True)
+  #logging.info('3. Fazendo RandomForest...')
+  randomForest2(data_scaled, targets, True)
 
-	logging.info('3. Fazendo KNN...')
-	knn(data_scaled)
+  logging.info('3. Fazendo KNN...')
+  knn(data_scaled, targets, True)
 
 if __name__ == "__main__":
-	exporacao()
+  exporacao()
