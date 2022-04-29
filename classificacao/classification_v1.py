@@ -13,7 +13,6 @@ from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split, GridSearchCV, StratifiedKFold
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics, preprocessing, svm
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import confusion_matrix,accuracy_score,recall_score,precision_score,make_scorer, classification_report, precision_recall_curve
