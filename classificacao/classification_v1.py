@@ -29,13 +29,14 @@ def load_data(nome_arquivo, drop_label):
   #salva a classificação
   y = input_data['Class'].tolist()
 
-
-
   #remove a classificação (col Class)
   if drop_label == 1:
     input_data = input_data.drop('Class', axis = 1)
     logging.info('Após drops: ')
     logging.info(input_data.head(10)) 
+
+  #retira o atributo Time por causa do resample
+  input_data = input_data.drop('Time', axis = 1)
 
   input_data_scaled = input_data.copy()
 
@@ -113,8 +114,8 @@ def resample_f(data):
   #tira o index
   df_1_upsampled.drop(['index'], axis=1, inplace=True)
   
-  #logging.info('df_1_upsampled>')
-  #print(df_1_upsampled.head(10))
+  logging.info('df_1_upsampled>')
+  print(df_1_upsampled.head(10))
 
   #logging.info('df_1_upsampled>')
   #print(df_1_upsampled)
@@ -290,7 +291,7 @@ def randomForest2(data, targets, X_train, X_test, y_train, y_test, ajusteLimiar=
     finalGridSearch = datetime.datetime.now();
     tempoPassadoGridSearch = finalGridSearch - inicioGridSearch
     logging.info('Tempo passado: %d microsegundos | %d segundos' % (tempoPassadoGridSearch.microseconds, tempoPassadoGridSearch.seconds))
-    curvas(grid_search_clf, X_test, y_test, 'RF')
+    #curvas(grid_search_clf, X_test, y_test, 'RF')
 
 
   #normalizando as amostras
@@ -404,7 +405,7 @@ def knn(data, targets, X_train, X_test, y_train, y_test, ajusteLimiar):
     finalGridSearch = datetime.datetime.now();
     tempoPassadoGridSearch = finalGridSearch - inicioGridSearch
     logging.info('Tempo passado: %d microsegundos | %d segundos' % (tempoPassadoGridSearch.microseconds, tempoPassadoGridSearch.seconds))
-    curvas(grid_search_clf, X_test, y_test, 'KNN')
+    #curvas(grid_search_clf, X_test, y_test, 'KNN')
 
   #aplica o KNN com a melhor quantidade de vizinhos q o ajuste definiu
   logging.info('Rodando KNN para as configuracoes escolhidas...')
@@ -443,7 +444,7 @@ def knn(data, targets, X_train, X_test, y_train, y_test, ajusteLimiar):
   print(classification_report(y_test, y_pred))
   
 
-def svm_f(data, targets, ajusteLimiar):
+def svm_f(data, targets, X_train, X_test, y_train, y_test, ajusteLimiar):
   logging.info('')
   logging.info('')
   logging.info('')
@@ -504,7 +505,7 @@ def svm_f(data, targets, ajusteLimiar):
     finalGridSearch = datetime.datetime.now();
     tempoPassadoGridSearch = finalGridSearch - inicioGridSearch
     logging.info('Tempo passado: %d microsegundos | %d segundos' % (tempoPassadoGridSearch.microseconds, tempoPassadoGridSearch.seconds))
-    curvas(grid_search_clf, X_test, y_test, 'SVM')
+    #curvas(grid_search_clf, X_test, y_test, 'SVM')
 
   logging.info('Fazendo SVM...')
   classifier = svm.SVC(kernel='linear')
@@ -560,44 +561,87 @@ def exporacao():
   data_scaled, y = load_data(nome_arquivo, 0)
 
   #resample
-  logging.info('2. Fazendo resample...')
-  data_scaled, targets = resample_f(data_scaled)
+  logging.info('2. Fazendo resample (3 conjuntos)...')
+  data_scaled1, targets1 = resample_f(data_scaled)
+  data_scaled2, targets2 = resample_f(data_scaled)
+  data_scaled3, targets3 = resample_f(data_scaled)
 
   #Com base nos melhores parâmetros gerados para cada algoritmo:
 
   #Treine modelos usando separação do DATASET em 50/50 e 80/20;
-  X_train1, X_test1, y_train1, y_test1 = train_test_split(data_scaled, targets, test_size = 0.5) #50/50
-  X_train2, X_test2, y_train2, y_test2 = train_test_split(data_scaled, targets, test_size = 0.2) #80/20
+  logging.info('3. Separando os conjuntos resampled do DATASET em 50/50 e 80/20...')
+  X_train11, X_test11, y_train11, y_test11 = train_test_split(data_scaled1, targets1, test_size = 0.5) #50/50
+  X_train12, X_test12, y_train12, y_test12 = train_test_split(data_scaled2, targets2, test_size = 0.5) #50/50
+  X_train13, X_test13, y_train13, y_test13 = train_test_split(data_scaled3, targets3, test_size = 0.5) #50/50
+
+  X_train21, X_test21, y_train21, y_test21 = train_test_split(data_scaled1, targets1, test_size = 0.2) #80/20
+  X_train22, X_test22, y_train22, y_test22 = train_test_split(data_scaled2, targets2, test_size = 0.2) #80/20
+  X_train23, X_test23, y_train23, y_test23 = train_test_split(data_scaled3, targets3, test_size = 0.2) #80/20
 
   #normalizando as amostras
-  logging.info('Normalizando as amostras...')
+  logging.info('4. Normalizando as amostras...')
   sc = StandardScaler()
 
   #50/50
-  X_train1 = sc.fit_transform(X_train1)
-  X_test1 = sc.transform(X_test1)
+  X_train11 = sc.fit_transform(X_train11)
+  X_test11 = sc.transform(X_test11)
+  X_train12 = sc.fit_transform(X_train12)
+  X_test12 = sc.transform(X_test12)
+  X_train13 = sc.fit_transform(X_train13)
+  X_test13 = sc.transform(X_test13)
 
   #80/20
-  X_train2 = sc.fit_transform(X_train2)
-  X_test2 = sc.transform(X_test2)
+  X_train21 = sc.fit_transform(X_train21)
+  X_test21 = sc.transform(X_test21)
+  X_train22 = sc.fit_transform(X_train22)
+  X_test22 = sc.transform(X_test22)
+  X_train23 = sc.fit_transform(X_train23)
+  X_test23 = sc.transform(X_test23)
 
-  logging.info('3.  Fazendo RandomForest:')
-  logging.info('3.1 Fazendo RandomForest com 50/50: ')
-  randomForest2(data_scaled, targets, X_train1, X_test1, y_train1, y_test1, True)
-  logging.info('3.2 Fazendo RandomForest com 80/20: ')
-  randomForest2(data_scaled, targets, X_train2, X_test2, y_train2, y_test2, True)
+  logging.info('5.  Fazendo RandomForest:')
+  logging.info('5.1 Fazendo RandomForest com 50/50 - conjunto 1: ')
+  randomForest2(data_scaled1, targets1, X_train11, X_test11, y_train11, y_test11, True)
+  logging.info('5.2 Fazendo RandomForest com 50/50 - conjunto 2: ')
+  randomForest2(data_scaled2, targets2, X_train12, X_test12, y_train12, y_test12, True)
+  logging.info('5.3 Fazendo RandomForest com 50/50 - conjunto 3: ')
+  randomForest2(data_scaled3, targets3, X_train13, X_test13, y_train13, y_test13, True)
 
-  logging.info('4.  Fazendo KNN...')
-  logging.info('4.1 Fazendo KNN com 50/50: ')
-  knn(data_scaled, targets, X_train1, X_test1, y_train1, y_test1, True)
-  logging.info('4.2 Fazendo KNN com 80/20: ')
-  knn(data_scaled, targets, X_train2, X_test2, y_train2, y_test2, True)
+  logging.info('5.4 Fazendo RandomForest com 80/20 - conjunto 1: ')
+  randomForest2(data_scaled1, targets1, X_train21, X_test21, y_train21, y_test21, True)
+  logging.info('5.5 Fazendo RandomForest com 80/20 - conjunto 2: ')
+  randomForest2(data_scaled2, targets2, X_train22, X_test22, y_train22, y_test22, True)
+  logging.info('5.6 Fazendo RandomForest com 80/20 - conjunto 3: ')
+  randomForest2(data_scaled3, targets3, X_train23, X_test23, y_train23, y_test23, True)
 
-  logging.info('5.  Fazendo SVM...')
-  logging.info('5.1 Fazendo SVM com 50/50: ')
-  svm_f(data_scaled, targets, X_train1, X_test1, y_train1, y_test1, False)
-  logging.info('5.2 Fazendo SVM com 80/20: ')
-  svm_f(data_scaled, targets, X_train2, X_test2, y_train2, y_test2, False)
+  logging.info('6.  Fazendo KNN...')
+  logging.info('6.1 Fazendo KNN com 50/50 - conjunto 1: ')
+  knn(data_scaled1, targets1, X_train11, X_test11, y_train11, y_test11, True)
+  logging.info('6.2 Fazendo KNN com 50/50 - conjunto 2: ')
+  knn(data_scaled2, targets2, X_train12, X_test12, y_train12, y_test12, True)
+  logging.info('6.3 Fazendo KNN com 50/50 - conjunto 3: ')
+  knn(data_scaled3, targets3, X_train13, X_test13, y_train13, y_test13, True)
+
+  logging.info('6.4 Fazendo KNN com 80/20 - conjunto 1: ')
+  knn(data_scaled1, targets1, X_train21, X_test21, y_train21, y_test21, True)
+  logging.info('6.5 Fazendo KNN com 80/20 - conjunto 2: ')
+  knn(data_scaled2, targets2, X_train22, X_test22, y_train22, y_test22, True)
+  logging.info('6.6 Fazendo KNN com 80/20 - conjunto 3: ')
+  knn(data_scaled3, targets3, X_train23, X_test23, y_train23, y_test23, True)
+
+  logging.info('7.  Fazendo SVM...')
+  logging.info('7.1 Fazendo SVM com 50/50 - conjunto 1: ')
+  svm_f(data_scaled1, targets1, X_train11, X_test11, y_train11, y_test11, False)
+  logging.info('7.2 Fazendo SVM com 50/50 - conjunto 2: ')
+  svm_f(data_scaled2, targets2, X_train12, X_test12, y_train12, y_test12, False)
+  logging.info('7.3 Fazendo SVM com 50/50 - conjunto 3: ')
+  svm_f(data_scaled3, targets3, X_train13, X_test13, y_train13, y_test13, False)
+
+  logging.info('7.4 Fazendo SVM com 80/20 - conjunto 1: ')
+  svm_f(data_scaled1, targets1, X_train21, X_test21, y_train21, y_test21, False)
+  logging.info('7.4 Fazendo SVM com 80/20 - conjunto 2: ')
+  svm_f(data_scaled2, targets2, X_train22, X_test22, y_train22, y_test22, False)
+  logging.info('7.4 Fazendo SVM com 80/20 - conjunto 3: ')
+  svm_f(data_scaled3, targets3, X_train23, X_test23, y_train23, y_test23, False)
 
 if __name__ == "__main__":
   exporacao()
