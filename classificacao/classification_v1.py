@@ -16,8 +16,9 @@ from sklearn.model_selection import train_test_split, GridSearchCV, StratifiedKF
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics, preprocessing, svm
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import confusion_matrix,accuracy_score,recall_score,precision_score,make_scorer, classification_report, precision_recall_curve
+from sklearn.metrics import confusion_matrix,accuracy_score,recall_score,precision_score,make_scorer,classification_report,precision_recall_curve,RocCurveDisplay,auc
 from sklearn.utils import resample, shuffle
+from scipy import interp
 
 def load_data(nome_arquivo, drop_label):
   input_data = pd.read_csv(nome_arquivo)
@@ -230,7 +231,7 @@ def salvar_modelo(nome_algoritmo, descricao_modelo, modelo):
   pickle.dump(modelo, open(path_completo, 'wb'))
   logging.info('Modelo salvo em ' + path_completo)
 
-def randomForest2(data, targets, X_train, X_test, y_train, y_test, descricao_modelo, params, ajusteLimiar=True):
+def randomForest2(data, targets, X_train, X_test, y_train, y_test, descricao_modelo, params):
   logging.info('')
   logging.info('')
   logging.info('')
@@ -240,99 +241,19 @@ def randomForest2(data, targets, X_train, X_test, y_train, y_test, descricao_mod
 
   inicio = datetime.datetime.now();
 
+  #pega os parâmetros (definidos pelo ajuste de limitar ou o default)
   best_n_estimators = params['n_estimators']
   best_min_samples_split = params['min_samples_split']
   best_max_depth = params['max_depth']
   best_max_features = params['max_features']
-
-  # if ajusteLimiar:
-  #   #fazendo ajuste de limiar de decisão
-  #   logging.info('Rodando ajuste de limiar...')
-
-  #   #dividir o dataset entre treinamento e validação
-  #   logging.info('Separando dataset em teste e treinamento...')
-  #   X_train, X_test, y_train, y_test = train_test_split(data, targets, stratify=targets)
-
-  #   logging.info('======= Distribuiçao de classes (y_train) ===========')
-  #   print(y_train.value_counts(normalize=True))
-  #   logging.info('')
-  #   print(y_train.value_counts())
-  #   logging.info('======= Distribuiçao de classes (y_test) ===========')
-  #   print(y_test.value_counts(normalize=True))
-  #   logging.info('')
-  #   print(y_test.value_counts())
-
-  #   #normalizando as amostras
-  #   logging.info('Normalizando as amostras...')
-  #   sc = StandardScaler()
-  #   X_train = sc.fit_transform(X_train)
-  #   X_test = sc.transform(X_test)
-
-  #   #(100 árvores e todos os processadores/núcleos)
-  #   clf=RandomForestClassifier(n_jobs=-1)
-
-  #   # param_grid = {
-  #   #   'min_samples_split': [3, 5], #número mínimo de amostras necessárias para dividir um nó interno
-  #   #   'n_estimators': [50, 100], #número de árvores
-  #   #   'max_depth': [3, 15], #altura máxima da árvore
-  #   #   'max_features': [5, 8] #número de atributos a considerar quando procurar a melhor divisão
-  #   # }
-
-  #   #apenas para acelerar os testes
-  #   param_grid = {
-  #     'min_samples_split': [3, 5], #número mínimo de amostras necessárias para dividir um nó interno
-  #     'n_estimators': [5, 10], #número de árvores
-  #     'max_depth': [3, 15], #altura máxima da árvore
-  #     'max_features': [5, 8] #número de atributos a considerar quando procurar a melhor divisão
-  #   }
-
-  #   scorers = {
-  #     'precision_score': make_scorer(precision_score), #habilidade de não classificar como positivo uma amostra que é negativa
-  #     'recall_score': make_scorer(recall_score), #habilidade de encontrar todas as amostras positivas
-  #     'accuracy_score': make_scorer(accuracy_score) # fração das previsões que o modelo acertou
-  #   }
-
-  #   inicioGridSearch = datetime.datetime.now();
-
-  #   logging.info('Rodando GridSearchCV...')
-  #   grid_search_clf = grid_search_wrapper(clf, param_grid, scorers, X_train, X_test, y_train, y_test, refit_score='precision_score')
-
-  #   best_n_estimators = grid_search_clf.best_params_['n_estimators']
-  #   logging.info('Melhor n_estimators: {}'.format(best_n_estimators))
-
-  #   best_min_samples_split = grid_search_clf.best_params_['min_samples_split']
-  #   logging.info('Melhor min_samples_split: {}'.format(best_min_samples_split))
-
-  #   best_max_depth = grid_search_clf.best_params_['max_depth']
-  #   logging.info('Melhor max_depth: {}'.format(best_max_depth))
-
-  #   best_max_features = grid_search_clf.best_params_['max_features']
-  #   logging.info('Melhor max_features: {}'.format(best_max_features))
-
-  #   salvar_modelo('RF', descricao_modelo, clf=RandomForestClassifier(n_estimators=best_n_estimators, 
-  #                            min_samples_split=best_min_samples_split, 
-  #                            max_depth=best_max_depth, 
-  #                            max_features=best_max_features, 
-  #                            n_jobs=-1))
-
-  #   finalGridSearch = datetime.datetime.now();
-  #   tempoPassadoGridSearch = finalGridSearch - inicioGridSearch
-  #   logging.info('Tempo passado: %d microsegundos | %d segundos' % (tempoPassadoGridSearch.microseconds, tempoPassadoGridSearch.seconds))
-  #   #curvas(grid_search_clf, X_test, y_test, 'RF')
-
-
-  #normalizando as amostras
-  # logging.info('Normalizando as amostras...')
-  # sc = StandardScaler()
-  # X_train = sc.fit_transform(X_train)
-  # X_test = sc.transform(X_test)
-
 
   logging.info('Rodando randomForest para as configuracoes escolhidas:')
   logging.info('n_estimators: {}'.format(best_n_estimators))
   logging.info('min_samples_split: {}'.format(best_min_samples_split))
   logging.info('max_depth: {}'.format(best_max_depth))
   logging.info('max_features: {}'.format(best_max_features))
+
+  #cria classificador
   clf=RandomForestClassifier(n_estimators=best_n_estimators, 
                              min_samples_split=best_min_samples_split, 
                              max_depth=best_max_depth, 
@@ -342,6 +263,7 @@ def randomForest2(data, targets, X_train, X_test, y_train, y_test, descricao_mod
   #treinar o modelo usando os sets y_pred=clf.predict(X_test)
   clf.fit(X_train,y_train)
 
+  #aplicar nas amostras de teste
   y_pred=clf.predict(X_test)
 
   final = datetime.datetime.now();
@@ -351,7 +273,7 @@ def randomForest2(data, targets, X_train, X_test, y_train, y_test, descricao_mod
   logging.info('Tempo passado: %d microsegundos | %d segundos' % (tempoPassado.microseconds, tempoPassado.seconds))
 
   #gravar os modelos para uso posterior
-  salvar_modelo('RF', descricao_modelo, modelo):
+  salvar_modelo('RF', descricao_modelo, clf)
 
   #matriz de confusão
   cm = confusion_matrix(y_test, y_pred)
@@ -371,9 +293,61 @@ def randomForest2(data, targets, X_train, X_test, y_train, y_test, descricao_mod
   logging.info("Recall:")
   print(rc)
 
+  #matriz de confusão
   plot_matriz_conf(cm, 'RF')
 
   print(classification_report(y_test, y_pred))
+
+  # y_pred_proba = clf.predict_proba(X_test)[::,1]
+  # fpr, tpr, _ = metrics.roc_curve(y_test, y_pred_proba)
+
+  # plt.plot(fpr, tpr)
+  # plt.ylabel('True Positive Rate')
+  # plt.xlabel('False Positive Rate')
+  # plt.show()
+
+  #CURVA ROC COM KFOLD = 5
+  curva_roc_kfold(clf, data, targets, X_train, y_train, X_test, y_test, 'RF', descricao_modelo)
+
+def curva_roc_kfold(clf, data, targets, X_train, y_train, X_test, y_test, nome_algoritmo, descricao_modelo):
+  logging.info('Gerando curva ROC com KFold de 5 para '+ nome_algoritmo + " - " + descricao_modelo)
+  cv = StratifiedKFold(n_splits=5, shuffle=False)
+
+  #limpa a figura para não plotar uma em cima da outra
+  plt.clf()
+
+  tprs = []
+  aucs = []
+  mean_fpr = np.linspace(0,1,100)
+  i = 1
+  for train,test in cv.split(data, targets):
+    prediction = clf.fit(X_train, y_train).predict_proba(X_test)
+    fpr, tpr, t = metrics.roc_curve(y_test, prediction[:, 1])
+    tprs.append(interp(mean_fpr, fpr, tpr))
+    roc_auc = auc(fpr, tpr)
+    aucs.append(roc_auc)
+    plt.plot(fpr, tpr, lw=2, alpha=0.3, label='ROC fold %d (AUC = %0.2f)' % (i, roc_auc))
+    i += 1
+
+  plt.plot([0,1], [0,1], linestyle='--',lw=2,color='black')
+  mean_tpr = np.mean(tprs, axis=0)
+  mean_auc = auc(mean_fpr, mean_tpr)
+  plt.plot(mean_fpr, mean_tpr, color='blue', label=r'Mean ROC (AUC = %0.2f )' % (mean_auc), lw=2, alpha=1)
+
+  plt.ylabel('True Positive Rate')
+  plt.xlabel('False Positive Rate')
+  plt.title('ROC')
+  plt.legend(loc='lower right')
+  plt.text(0.32,0.7,'More accurate area', fontsize=12)
+  plt.text(0.63,0.4,'Less accurate area', fontsize=12)
+  #plt.show()
+
+  nomeFig = "imagens/curvas_ROC/ROC_" + nome_algoritmo + "_" + descricao_modelo + ".png"
+  plt.savefig(nomeFig)
+  logging.info('Salvo em ' + nomeFig)
+
+  #limpa a figura para não plotar uma em cima da outra
+  plt.clf()
 
 def knn(data, targets, X_train, X_test, y_train, y_test, descricao_modelo, params, ajusteLimiar):
 
@@ -386,71 +360,20 @@ def knn(data, targets, X_train, X_test, y_train, y_test, descricao_modelo, param
 
   inicio = datetime.datetime.now();
 
-  best_n_neighbors = 1;
-
+  #pega os parâmetros (definidos pelo ajuste de limiar ou o default)
   best_n_neighbors = params['n_neighbors']
-
-  # if ajusteLimiar:
-  #   #fazendo ajuste de limiar de decisão
-  #   logging.info('Rodando ajuste de limiar...')
-
-  #   #dividir o dataset entre treinamento e validação
-  #   logging.info('Separando dataset em teste e treinamento...')
-  #   X_train, X_test, y_train, y_test = train_test_split(data, targets, stratify=targets)
-
-  #   logging.info('======= Distribuiçao de classes (y_train) ===========')
-  #   logging.info(y_train.value_counts(normalize=True))
-  #   logging.info('')
-  #   logging.info(y_train.value_counts())
-  #   logging.info('======= Distribuiçao de classes (y_test) ===========')
-  #   logging.info(y_test.value_counts(normalize=True))
-  #   logging.info('')
-  #   logging.info(y_test.value_counts())
-
-  #   #normalizando as amostras
-  #   logging.info('Normalizando as amostras...')
-  #   sc = StandardScaler()
-  #   X_train = sc.fit_transform(X_train)
-  #   X_test = sc.transform(X_test)
-
-  #   #(100 árvores e todos os processadores/núcleos)
-  #   clf=KNeighborsClassifier(n_jobs=-1)
-
-  #   param_grid = {
-  #     'n_neighbors': [1, 3, 5], #número de vizinhos
-  #   }
-
-  #   #apenas para acelerar os testes
-  #   # param_grid = {
-  #   #   'n_neighbors': [1], #número de vizinhos
-  #   # }
-
-  #   scorers = {
-  #     'precision_score': make_scorer(precision_score), #habilidade de não classificar como positivo uma amostra que é negativa
-  #     'recall_score': make_scorer(recall_score), #habilidade de encontrar todas as amostras positivas
-  #     'accuracy_score': make_scorer(accuracy_score) # fração das previsões que o modelo acertou
-  #   }
-
-  #   inicioGridSearch = datetime.datetime.now();
-
-  #   grid_search_clf = grid_search_wrapper(clf, param_grid, scorers, X_train, X_test, y_train, y_test, refit_score='precision_score')
-
-  #   best_n_neighbors = grid_search_clf.best_params_['n_neighbors']
-  #   logging.info('Melhor n_neighbors: {}'.format(best_n_neighbors))
-
-  #   finalGridSearch = datetime.datetime.now();
-  #   tempoPassadoGridSearch = finalGridSearch - inicioGridSearch
-  #   logging.info('Tempo passado: %d microsegundos | %d segundos' % (tempoPassadoGridSearch.microseconds, tempoPassadoGridSearch.seconds))
-  #   #curvas(grid_search_clf, X_test, y_test, 'KNN')
 
   #aplica o KNN com a melhor quantidade de vizinhos q o ajuste definiu
   logging.info('Rodando KNN para as configuracoes escolhidas...')
   logging.info('n_neighbors: {}'.format(best_n_neighbors))
+
+  #cria classificador
   classifier = KNeighborsClassifier(n_neighbors = best_n_neighbors)
 
   #treina
   classifier.fit(X_train, y_train)
 
+  #aplica sobre as amostras de teste
   y_pred = classifier.predict(X_test)
 
   final = datetime.datetime.now();
@@ -460,7 +383,7 @@ def knn(data, targets, X_train, X_test, y_train, y_test, descricao_modelo, param
   logging.info('Tempo passado: %d microsegundos | %d segundos' % (tempoPassado.microseconds, tempoPassado.seconds))
 
   #gravar os modelos para uso posterior
-  salvar_modelo('KNN', descricao_modelo, modelo):
+  salvar_modelo('KNN', descricao_modelo, classifier)
 
   #matriz de confusão
   cm = confusion_matrix(y_test, y_pred)
@@ -608,20 +531,20 @@ def ajusteLimiarRF(data, targets, descricao_modelo):
   #todos os processadores/núcleos
   clf=RandomForestClassifier(n_jobs=-1)
 
-  param_grid = {
-    'min_samples_split': [3, 5], #número mínimo de amostras necessárias para dividir um nó interno
-    'n_estimators': [50, 100], #número de árvores
-    'max_depth': [3, 15], #altura máxima da árvore
-    'max_features': [5, 8] #número de atributos a considerar quando procurar a melhor divisão
-  }
-
-  #apenas para acelerar os testes
   # param_grid = {
   #   'min_samples_split': [3, 5], #número mínimo de amostras necessárias para dividir um nó interno
-  #   'n_estimators': [5, 10], #número de árvores
-  #   'max_depth': [1, 3], #altura máxima da árvore
-  #   'max_features': [1, 3] #número de atributos a considerar quando procurar a melhor divisão
+  #   'n_estimators': [50, 100], #número de árvores
+  #   'max_depth': [3, 15], #altura máxima da árvore
+  #   'max_features': [5, 8] #número de atributos a considerar quando procurar a melhor divisão
   # }
+
+  #apenas para acelerar os testes
+  param_grid = {
+    'min_samples_split': [3, 5], #número mínimo de amostras necessárias para dividir um nó interno
+    'n_estimators': [5, 10], #número de árvores
+    'max_depth': [1, 3], #altura máxima da árvore
+    'max_features': [1, 3] #número de atributos a considerar quando procurar a melhor divisão
+  }
 
   scorers = {
     'precision_score': make_scorer(precision_score), #habilidade de não classificar como positivo uma amostra que é negativa
@@ -646,16 +569,16 @@ def ajusteLimiarRF(data, targets, descricao_modelo):
   best_max_features = grid_search_clf.best_params_['max_features']
   logging.info('Melhor max_features: {}'.format(best_max_features))
 
+  finalGridSearch = datetime.datetime.now();
+  tempoPassadoGridSearch = finalGridSearch - inicioGridSearch
+  logging.info('Tempo passado: %d microsegundos | %d segundos' % (tempoPassadoGridSearch.microseconds, tempoPassadoGridSearch.seconds))
+  #curvas(grid_search_clf, X_test, y_test, 'RF')
+
   salvar_modelo('RF', descricao_modelo, modelo=RandomForestClassifier(n_estimators=best_n_estimators, 
                              min_samples_split=best_min_samples_split, 
                              max_depth=best_max_depth, 
                              max_features=best_max_features, 
                              n_jobs=-1))
-
-  finalGridSearch = datetime.datetime.now();
-  tempoPassadoGridSearch = finalGridSearch - inicioGridSearch
-  logging.info('Tempo passado: %d microsegundos | %d segundos' % (tempoPassadoGridSearch.microseconds, tempoPassadoGridSearch.seconds))
-  #curvas(grid_search_clf, X_test, y_test, 'RF')
 
   return grid_search_clf.best_params_
 
@@ -712,6 +635,8 @@ def ajusteLimiarKNN(data, targets, descricao_modelo):
   logging.info('Tempo passado: %d microsegundos | %d segundos' % (tempoPassadoGridSearch.microseconds, tempoPassadoGridSearch.seconds))
   #curvas(grid_search_clf, X_test, y_test, 'KNN')
 
+  salvar_modelo('KNN', descricao_modelo, modelo=KNeighborsClassifier(n_neighbors=best_n_neighbors, n_jobs=-1))
+
   return grid_search_clf.best_params_
 
 def exporacao():
@@ -749,12 +674,12 @@ def exporacao():
   params_rf_c3=ajusteLimiarRF(data_scaled3, targets3, 'c3')
 
   #KNN
-  logging.info('3.1 Rodando ajuste de RandomForest para conjunto 1')
-  params_knn_c1=ajusteLimiarKNN(data_scaled1, targets1, 'c1')
-  logging.info('3.2 Rodando ajuste de RandomForest para conjunto 2')
-  params_knn_c2=ajusteLimiarKNN(data_scaled2, targets2, 'c2')
-  logging.info('3.3 Rodando ajuste de RandomForest para conjunto 3')
-  params_knn_c3=ajusteLimiarKNN(data_scaled3, targets3, 'c3')
+  # logging.info('3.1 Rodando ajuste de KNN para conjunto 1')
+  # params_knn_c1=ajusteLimiarKNN(data_scaled1, targets1, 'c1')
+  # logging.info('3.2 Rodando ajuste de KNN para conjunto 2')
+  # params_knn_c2=ajusteLimiarKNN(data_scaled2, targets2, 'c2')
+  # logging.info('3.3 Rodando ajuste de KNN para conjunto 3')
+  # params_knn_c3=ajusteLimiarKNN(data_scaled3, targets3, 'c3')
 
 
   #Com base nos melhores parâmetros gerados para cada algoritmo:
@@ -799,18 +724,18 @@ def exporacao():
 
   logging.info('5.  Fazendo RandomForest:')
   logging.info('5.1 Fazendo RandomForest com 50/50 - conjunto 1: ')
-  randomForest2(data_scaled1, targets1, X_train11, X_test11, y_train11, y_test11, '50-50-c1', params_rf_c1, True)
+  randomForest2(data_scaled1, targets1, X_train11, X_test11, y_train11, y_test11, '50-50-c1', params_rf_c1)
   logging.info('5.2 Fazendo RandomForest com 50/50 - conjunto 2: ')
-  randomForest2(data_scaled2, targets2, X_train12, X_test12, y_train12, y_test12, '50-50-c2', params_rf_c2, True)
+  randomForest2(data_scaled2, targets2, X_train12, X_test12, y_train12, y_test12, '50-50-c2', params_rf_c2)
   logging.info('5.3 Fazendo RandomForest com 50/50 - conjunto 3: ')
-  randomForest2(data_scaled3, targets3, X_train13, X_test13, y_train13, y_test13, '50-50-c3', params_rf_c3, True)
+  randomForest2(data_scaled3, targets3, X_train13, X_test13, y_train13, y_test13, '50-50-c3', params_rf_c3)
 
   logging.info('5.4 Fazendo RandomForest com 80/20 - conjunto 1: ')
-  randomForest2(data_scaled1, targets1, X_train21, X_test21, y_train21, y_test21, '80-20-c1', params_rf_c1, True)
+  randomForest2(data_scaled1, targets1, X_train21, X_test21, y_train21, y_test21, '80-20-c1', params_rf_c1)
   logging.info('5.5 Fazendo RandomForest com 80/20 - conjunto 2: ')
-  randomForest2(data_scaled2, targets2, X_train22, X_test22, y_train22, y_test22, '80-20-c2', params_rf_c2, True)
+  randomForest2(data_scaled2, targets2, X_train22, X_test22, y_train22, y_test22, '80-20-c2', params_rf_c2)
   logging.info('5.6 Fazendo RandomForest com 80/20 - conjunto 3: ')
-  randomForest2(data_scaled3, targets3, X_train23, X_test23, y_train23, y_test23, '80-20-c3', params_rf_c3, True)
+  randomForest2(data_scaled3, targets3, X_train23, X_test23, y_train23, y_test23, '80-20-c3', params_rf_c3)
 
   #melhores parâmetros do KNN gerados em execuções anteriores do ajuste de limiar
   best_n_neighbors = 3
@@ -818,18 +743,18 @@ def exporacao():
 
   logging.info('6.  Fazendo KNN...')
   logging.info('6.1 Fazendo KNN com 50/50 - conjunto 1: ')
-  knn(data_scaled1, targets1, X_train11, X_test11, y_train11, y_test11, '50-50-c1', params_rf_c1, True)
+  knn(data_scaled1, targets1, X_train11, X_test11, y_train11, y_test11, '50-50-c1', params_knn_c1, True)
   logging.info('6.2 Fazendo KNN com 50/50 - conjunto 2: ')
-  knn(data_scaled2, targets2, X_train12, X_test12, y_train12, y_test12, '50-50-c2', params_rf_c2, True)
+  knn(data_scaled2, targets2, X_train12, X_test12, y_train12, y_test12, '50-50-c2', params_knn_c2, True)
   logging.info('6.3 Fazendo KNN com 50/50 - conjunto 3: ')
-  knn(data_scaled3, targets3, X_train13, X_test13, y_train13, y_test13, '50-50-c3', params_rf_c3, True)
+  knn(data_scaled3, targets3, X_train13, X_test13, y_train13, y_test13, '50-50-c3', params_knn_c3, True)
 
   logging.info('6.4 Fazendo KNN com 80/20 - conjunto 1: ')
-  knn(data_scaled1, targets1, X_train21, X_test21, y_train21, y_test21, '80-20-c1', params_rf_c1, True)
+  knn(data_scaled1, targets1, X_train21, X_test21, y_train21, y_test21, '80-20-c1', params_knn_c1, True)
   logging.info('6.5 Fazendo KNN com 80/20 - conjunto 2: ')
-  knn(data_scaled2, targets2, X_train22, X_test22, y_train22, y_test22, '80-20-c2', params_rf_c2, True)
+  knn(data_scaled2, targets2, X_train22, X_test22, y_train22, y_test22, '80-20-c2', params_knn_c2, True)
   logging.info('6.6 Fazendo KNN com 80/20 - conjunto 3: ')
-  knn(data_scaled3, targets3, X_train23, X_test23, y_train23, y_test23, '80-20-c2', params_rf_c2, True)
+  knn(data_scaled3, targets3, X_train23, X_test23, y_train23, y_test23, '80-20-c2', params_knn_c2, True)
 
   logging.info('7.  Fazendo SVM...')
   logging.info('7.1 Fazendo SVM com 50/50 - conjunto 1: ')
