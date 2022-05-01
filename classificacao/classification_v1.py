@@ -55,12 +55,6 @@ def plot_matriz_conf(cm, alg, descricao_modelo):
   ax.xaxis.set_ticklabels(['False', 'True'])
   ax.yaxis.set_ticklabels(['False', 'True'])
 
-  #plt.show()
-  # i = 1
-  # nomeFig1 = 'matriz_conf_'+str(i)+'_'+alg+'.png'
-  # while os.path.exists(nomeFig1):
-  #   i += 1
-  #   nomeFig1 = 'matriz_conf_'+str(i)+'_'+alg+'.png'
   nomeFig1 = 'matriz_conf_'+descricao_modelo+'_'+alg+'.png'
   plt.savefig(nomeFig1)
   logging.info('Salvo em ' + nomeFig1)
@@ -77,13 +71,6 @@ def plot_matriz_conf(cm, alg, descricao_modelo):
   ax.xaxis.set_ticklabels(['False', 'True'])
   ax.yaxis.set_ticklabels(['False', 'True'])
 
-  #plt.show()
-
-  # i = 1
-  # nomeFig2 = 'matriz_conf_porc_'+str(i)+'_'+alg+'.png'
-  # while os.path.exists(nomeFig2):
-  #   i += 1
-  #   nomeFig2 = 'matriz_conf_porc_'+str(i)+'_'+alg+'.png'
   nomeFig2 = 'matriz_conf_porc_'+descricao_modelo+'_'+alg+'.png'
   plt.savefig(nomeFig2)
   logging.info('Salvo em ' + nomeFig2)
@@ -228,9 +215,7 @@ def salvar_modelo(nome_algoritmo, descricao_modelo, modelo):
   path_completo = folder_modelos + nome_modelo;
 
   if os.path.exists(path_completo):
-    #print('Arquivo ' + path_completo + ' já existe!')
     os.remove(path_completo)
-    #exit()
 
   pickle.dump(modelo, open(path_completo, 'wb'))
   logging.info('Modelo salvo em ' + path_completo)
@@ -469,19 +454,19 @@ def ajusteLimiarRF(data, targets, X_train, X_test, y_train, y_test, descricao_mo
   clf=RandomForestClassifier(n_jobs=-1)
 
   #apenas para acelerar os testes
-  param_grid = {
-    'min_samples_split': [3, 5], #número mínimo de amostras necessárias para dividir um nó interno
-    'n_estimators': [5, 10], #número de árvores
-    'max_depth': [1, 3], #altura máxima da árvore
-    'max_features': [1, 3] #número de atributos a considerar quando procurar a melhor divisão
-  }
-
   # param_grid = {
   #   'min_samples_split': [3, 5], #número mínimo de amostras necessárias para dividir um nó interno
-  #   'n_estimators': [50, 100], #número de árvores
-  #   'max_depth': [3, 15], #altura máxima da árvore
-  #   'max_features': [5, 8] #número de atributos a considerar quando procurar a melhor divisão
+  #   'n_estimators': [5, 10], #número de árvores
+  #   'max_depth': [1, 3], #altura máxima da árvore
+  #   'max_features': [1, 3] #número de atributos a considerar quando procurar a melhor divisão
   # }
+
+  param_grid = {
+    'min_samples_split': [3, 5], #número mínimo de amostras necessárias para dividir um nó interno
+    'n_estimators': [50, 100], #número de árvores
+    'max_depth': [3, 15], #altura máxima da árvore
+    'max_features': [5, 8] #número de atributos a considerar quando procurar a melhor divisão
+  }
 
   scorers = {
     'precision_score': make_scorer(precision_score), #habilidade de não classificar como positivo uma amostra que é negativa
@@ -526,13 +511,13 @@ def ajusteLimiarKNN(data, targets, X_train, X_test, y_train, y_test, descricao_m
   clf=KNeighborsClassifier(n_jobs=-1)
 
   #apenas para acelerar os testes
-  param_grid = {
-   'n_neighbors': [1], #número de vizinhos
-  }
-
   # param_grid = {
-  #   'n_neighbors': [1, 3, 5], #número de vizinhos
+  #  'n_neighbors': [1], #número de vizinhos
   # }
+
+  param_grid = {
+    'n_neighbors': [1, 3, 5], #número de vizinhos
+  }
 
   scorers = {
     'precision_score': make_scorer(precision_score), #habilidade de não classificar como positivo uma amostra que é negativa
@@ -563,15 +548,15 @@ def ajusteLimiarSVM(data, targets, X_train, X_test, y_train, y_test, descricao_m
   clf=svm.SVC(probability=True)
 
   #apenas para acelerar os testes
-  param_grid = {
-   'max_iter': [100], #número de iterações
-   'cache_size': [200, 500] #tamanho da cache do kernel em MB
-  }
-
   # param_grid = {
-  #   'max_iter': [1000, 5000], #número de iterações
-  #   'cache_size': [200, 500] #tamanho da cache do kernel em MB
+  #  'max_iter': [100], #número de iterações
+  #  'cache_size': [200, 500] #tamanho da cache do kernel em MB
   # }
+
+  param_grid = {
+    'max_iter': [1000, 5000], #número de iterações
+    'cache_size': [200, 500] #tamanho da cache do kernel em MB
+  }
 
   scorers = {
     'precision_score': make_scorer(precision_score), #habilidade de não classificar como positivo uma amostra que é negativa
@@ -637,20 +622,20 @@ def exporacao():
   X_train3, X_test3 = normalizar(sc, X_train3, X_test3)
 
   #RF
-  # logging.info('3.3 Rodando ajuste de RandomForest para conjunto 1')
-  # params_rf_c1=ajusteLimiarRF(data_scaled1, targets1, X_train1, X_test1, y_train1, y_test1, 'c1')
-  # logging.info('3.4 Rodando ajuste de RandomForest para conjunto 2')
-  # params_rf_c2=ajusteLimiarRF(data_scaled2, targets2, X_train2, X_test2, y_train2, y_test2, 'c2')
-  # logging.info('3.5 Rodando ajuste de RandomForest para conjunto 3')
-  # params_rf_c3=ajusteLimiarRF(data_scaled3, targets3, X_train3, X_test3, y_train3, y_test3, 'c3')
+  logging.info('3.3 Rodando ajuste de RandomForest para conjunto 1')
+  params_rf_c1=ajusteLimiarRF(data_scaled1, targets1, X_train1, X_test1, y_train1, y_test1, 'c1')
+  logging.info('3.4 Rodando ajuste de RandomForest para conjunto 2')
+  params_rf_c2=ajusteLimiarRF(data_scaled2, targets2, X_train2, X_test2, y_train2, y_test2, 'c2')
+  logging.info('3.5 Rodando ajuste de RandomForest para conjunto 3')
+  params_rf_c3=ajusteLimiarRF(data_scaled3, targets3, X_train3, X_test3, y_train3, y_test3, 'c3')
 
   # #KNN
-  # logging.info('3.6 Rodando ajuste de KNN para conjunto 1')
-  # params_knn_c1=ajusteLimiarKNN(data_scaled1, targets1, X_train1, X_test1, y_train1, y_test1, 'c1')
-  # logging.info('3.7 Rodando ajuste de KNN para conjunto 2')
-  # params_knn_c2=ajusteLimiarKNN(data_scaled2, targets2, X_train2, X_test2, y_train2, y_test2, 'c2')
-  # logging.info('3.8 Rodando ajuste de KNN para conjunto 3')
-  # params_knn_c3=ajusteLimiarKNN(data_scaled3, targets3, X_train3, X_test3, y_train3, y_test3, 'c3')
+  logging.info('3.6 Rodando ajuste de KNN para conjunto 1')
+  params_knn_c1=ajusteLimiarKNN(data_scaled1, targets1, X_train1, X_test1, y_train1, y_test1, 'c1')
+  logging.info('3.7 Rodando ajuste de KNN para conjunto 2')
+  params_knn_c2=ajusteLimiarKNN(data_scaled2, targets2, X_train2, X_test2, y_train2, y_test2, 'c2')
+  logging.info('3.8 Rodando ajuste de KNN para conjunto 3')
+  params_knn_c3=ajusteLimiarKNN(data_scaled3, targets3, X_train3, X_test3, y_train3, y_test3, 'c3')
 
   #SVM
   logging.info('3.9 Rodando ajuste de SVM para conjunto 1')
@@ -693,58 +678,58 @@ def exporacao():
   params_RF_default = {"n_estimators": best_n_estimators, "min_samples_split": best_min_samples_split,
                     "max_features": best_max_features, "max_depth": best_max_depth}
 
-  # logging.info('5.  Fazendo RandomForest:')
-  # logging.info('5.1 Fazendo RandomForest com 50/50 - conjunto 1: ')
-  # randomForest2(data_scaled1, targets1, X_train11, X_test11, y_train11, y_test11, '50-50-c1', params_rf_c1)
-  # logging.info('5.2 Fazendo RandomForest com 50/50 - conjunto 2: ')
-  # randomForest2(data_scaled2, targets2, X_train12, X_test12, y_train12, y_test12, '50-50-c2', params_rf_c2)
-  # logging.info('5.3 Fazendo RandomForest com 50/50 - conjunto 3: ')
-  # randomForest2(data_scaled3, targets3, X_train13, X_test13, y_train13, y_test13, '50-50-c3', params_rf_c3)
+  logging.info('6.  Fazendo RandomForest:')
+  logging.info('6.1 Fazendo RandomForest com 50/50 - conjunto 1: ')
+  randomForest2(data_scaled1, targets1, X_train11, X_test11, y_train11, y_test11, '50-50-c1', params_rf_c1)
+  logging.info('6.2 Fazendo RandomForest com 50/50 - conjunto 2: ')
+  randomForest2(data_scaled2, targets2, X_train12, X_test12, y_train12, y_test12, '50-50-c2', params_rf_c2)
+  logging.info('6.3 Fazendo RandomForest com 50/50 - conjunto 3: ')
+  randomForest2(data_scaled3, targets3, X_train13, X_test13, y_train13, y_test13, '50-50-c3', params_rf_c3)
 
-  # logging.info('5.4 Fazendo RandomForest com 80/20 - conjunto 1: ')
-  # randomForest2(data_scaled1, targets1, X_train21, X_test21, y_train21, y_test21, '80-20-c1', params_rf_c1)
-  # logging.info('5.5 Fazendo RandomForest com 80/20 - conjunto 2: ')
-  # randomForest2(data_scaled2, targets2, X_train22, X_test22, y_train22, y_test22, '80-20-c2', params_rf_c2)
-  # logging.info('5.6 Fazendo RandomForest com 80/20 - conjunto 3: ')
-  # randomForest2(data_scaled3, targets3, X_train23, X_test23, y_train23, y_test23, '80-20-c3', params_rf_c3)
+  logging.info('6.4 Fazendo RandomForest com 80/20 - conjunto 1: ')
+  randomForest2(data_scaled1, targets1, X_train21, X_test21, y_train21, y_test21, '80-20-c1', params_rf_c1)
+  logging.info('6.5 Fazendo RandomForest com 80/20 - conjunto 2: ')
+  randomForest2(data_scaled2, targets2, X_train22, X_test22, y_train22, y_test22, '80-20-c2', params_rf_c2)
+  logging.info('6.6 Fazendo RandomForest com 80/20 - conjunto 3: ')
+  randomForest2(data_scaled3, targets3, X_train23, X_test23, y_train23, y_test23, '80-20-c3', params_rf_c3)
 
   #melhores parâmetros 'default' para KNN
   best_n_neighbors = 3
   params_KNN_default = {"n_neighbors": best_n_neighbors}
 
-  logging.info('6.  Fazendo KNN...')
-  logging.info('6.1 Fazendo KNN com 50/50 - conjunto 1: ')
-  # knn(data_scaled1, targets1, X_train11, X_test11, y_train11, y_test11, '50-50-c1', params_knn_c1)
-  # logging.info('6.2 Fazendo KNN com 50/50 - conjunto 2: ')
-  # knn(data_scaled2, targets2, X_train12, X_test12, y_train12, y_test12, '50-50-c2', params_knn_c2)
-  # logging.info('6.3 Fazendo KNN com 50/50 - conjunto 3: ')
-  # knn(data_scaled3, targets3, X_train13, X_test13, y_train13, y_test13, '50-50-c3', params_knn_c3)
+  logging.info('7.  Fazendo KNN...')
+  logging.info('7.1 Fazendo KNN com 50/50 - conjunto 1: ')
+  knn(data_scaled1, targets1, X_train11, X_test11, y_train11, y_test11, '50-50-c1', params_knn_c1)
+  logging.info('7.2 Fazendo KNN com 50/50 - conjunto 2: ')
+  knn(data_scaled2, targets2, X_train12, X_test12, y_train12, y_test12, '50-50-c2', params_knn_c2)
+  logging.info('7.3 Fazendo KNN com 50/50 - conjunto 3: ')
+  knn(data_scaled3, targets3, X_train13, X_test13, y_train13, y_test13, '50-50-c3', params_knn_c3)
 
-  # logging.info('6.4 Fazendo KNN com 80/20 - conjunto 1: ')
-  # knn(data_scaled1, targets1, X_train21, X_test21, y_train21, y_test21, '80-20-c1', params_knn_c1)
-  # logging.info('6.5 Fazendo KNN com 80/20 - conjunto 2: ')
-  # knn(data_scaled2, targets2, X_train22, X_test22, y_train22, y_test22, '80-20-c2', params_knn_c2)
-  # logging.info('6.6 Fazendo KNN com 80/20 - conjunto 3: ')
-  # knn(data_scaled3, targets3, X_train23, X_test23, y_train23, y_test23, '80-20-c3', params_knn_c3)
+  logging.info('7.4 Fazendo KNN com 80/20 - conjunto 1: ')
+  knn(data_scaled1, targets1, X_train21, X_test21, y_train21, y_test21, '80-20-c1', params_knn_c1)
+  logging.info('7.5 Fazendo KNN com 80/20 - conjunto 2: ')
+  knn(data_scaled2, targets2, X_train22, X_test22, y_train22, y_test22, '80-20-c2', params_knn_c2)
+  logging.info('7.6 Fazendo KNN com 80/20 - conjunto 3: ')
+  knn(data_scaled3, targets3, X_train23, X_test23, y_train23, y_test23, '80-20-c3', params_knn_c3)
 
   #melhores parâmetros 'default' para SVM
   best_max_iter = 5000
   best_cache_size = 500
   params_SVM_default = {"max_iter": best_max_iter, "cache_size": best_cache_size}
 
-  logging.info('7.  Fazendo SVM...')
-  logging.info('7.1 Fazendo SVM com 50/50 - conjunto 1: ')
+  logging.info('8.  Fazendo SVM...')
+  logging.info('8.1 Fazendo SVM com 50/50 - conjunto 1: ')
   svm_f(data_scaled1, targets1, X_train11, X_test11, y_train11, y_test11, '50-50-c1', params_svm_c1)
-  logging.info('7.2 Fazendo SVM com 50/50 - conjunto 2: ')
+  logging.info('8.2 Fazendo SVM com 50/50 - conjunto 2: ')
   svm_f(data_scaled2, targets2, X_train12, X_test12, y_train12, y_test12, '50-50-c2', params_svm_c2)
-  logging.info('7.3 Fazendo SVM com 50/50 - conjunto 3: ')
+  logging.info('8.3 Fazendo SVM com 50/50 - conjunto 3: ')
   svm_f(data_scaled3, targets3, X_train13, X_test13, y_train13, y_test13, '50-50-c3', params_svm_c3)
 
-  logging.info('7.4 Fazendo SVM com 80/20 - conjunto 1: ')
+  logging.info('8.4 Fazendo SVM com 80/20 - conjunto 1: ')
   svm_f(data_scaled1, targets1, X_train21, X_test21, y_train21, y_test21, '80-20-c1', params_svm_c1)
-  logging.info('7.4 Fazendo SVM com 80/20 - conjunto 2: ')
+  logging.info('8.4 Fazendo SVM com 80/20 - conjunto 2: ')
   svm_f(data_scaled2, targets2, X_train22, X_test22, y_train22, y_test22, '80-20-c2', params_svm_c2)
-  logging.info('7.4 Fazendo SVM com 80/20 - conjunto 3: ')
+  logging.info('8.4 Fazendo SVM com 80/20 - conjunto 3: ')
   svm_f(data_scaled3, targets3, X_train23, X_test23, y_train23, y_test23, '80-20-c3', params_svm_c3)
 
 if __name__ == "__main__":
