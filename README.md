@@ -17,7 +17,7 @@ Bruno E. Farias - GRR20186715
 
 :point_right: [Tarefa 4](#tarefa-4)
 
-:new: [Classificação / Tarefa Final](#classificação-/-Tarefa-Final)
+:new: [Classificação / Tarefa Final](#classificação-Tarefa-Final)
 
 
 ## Tarefa 1 
@@ -107,7 +107,7 @@ Usar como número de cluster o número de classes do seu problema (se for binár
 :mag_right: [Ver arquivo clustering_v4.py](tarefa4/clustering_v4.py)
 :mag_right: [Ver relatório Tarefa_4_bruno.pptx](tarefa4/Tarefa_4_bruno.pptx)
 
-## Classificação / Tarefa Final
+## Classificação Tarefa Final
 
 :arrow_right: Random Forest
 
