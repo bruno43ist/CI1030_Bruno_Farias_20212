@@ -17,7 +17,7 @@ Bruno E. Farias - GRR20186715
 
 :point_right: [Tarefa 4](#tarefa-4)
 
-:new: [Classificação/Tarefa Final](#classificação-/-Tarefa-Final)
+:new: [Classificação / Tarefa Final](#classificação-/-Tarefa-Final)
 
 
 ## Tarefa 1 
