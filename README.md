@@ -147,13 +147,31 @@ SVM
 RF
 ![ver imagem](classificacao/imagens/codigoRFconjuntos.png)
 
+Matriz de confusão 50/50 - Conjunto 3
+![ver imagem](classificacao/imagens/matriz_conf_porc_50-50-c3_RF.png)
+
+Matriz de confusão 80/20 - Conjunto 3
+![ver imagem](classificacao/imagens/matriz_conf_porc_80-20-c3_RF.png)
+
 
 KNN
 ![ver imagem](classificacao/imagens/codigoKNNconjuntos.png)
 
+Matriz de confusão 50/50 - Conjunto 3
+![ver imagem](classificacao/imagens/matriz_conf_porc_50-50-c3_KNN.png)
+
+Matriz de confusão 80/20 - Conjunto 3
+![ver imagem](classificacao/imagens/matriz_conf_porc_80-20-c3_KNN.png)
+
 
 SVM
 ![ver imagem](classificacao/imagens/codigoSVMconjuntos.png)
+
+Matriz de confusão 50/50 - Conjunto 3
+![ver imagem](classificacao/imagens/matriz_conf_porc_50-50-c3_SVM.png)
+
+Matriz de confusão 80/20 - Conjunto 3
+![ver imagem](classificacao/imagens/matriz_conf_porc_80-20-c3_SVM.png)
 
 
 
