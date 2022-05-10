@@ -109,21 +109,15 @@ Usar como número de cluster o número de classes do seu problema (se for binár
 
 ## Classificação Tarefa Final
 
-:arrow_right: Random Forest
+:arrow_right: Separação do dataset em 80/20
 
-70% treino e 30% testes
+![ver imagem](classificacao/imagens/codigoSeparacao50508020.png)
 
-n_estimators = 100;
+80%
+![ver imagem](classificacao/imagens/creditCard-80-print.png)
 
-tempo: 149 segundos
-
-acurácia: 0.999
-
-recall: 0.838
-
-![ver imagem](classificacao/matriz_conf_2_random_forest.png)
-![ver imagem](classificacao/matriz_conf_2_random_forest_porcentagem.png)
-![ver imagem](classificacao/console_RandomForest.png)
+20%
+![ver imagem](classificacao/imagens/creditCard-20-print.png)
 
 
 :arrow_right: KNN
