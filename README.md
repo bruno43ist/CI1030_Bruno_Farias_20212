@@ -182,22 +182,18 @@ Matriz de confusão 80/20 - Conjunto 3
 
 
 
-:arrow_right: KNN
+:arrow_right: Até o momento, KNN é a melhor escolha pois pega melhor as amostras com fraude (recall alto)
 
-70% treino e 30% testes
+:arrow_right: RF demora menos, mas tem recall menor
 
-5 vizinhos
 
-tempo: 273 segundos
+:arrow_right: Novos datasets: 20% (aqueles retirados do dataset original), 1 para 3, 1 para 4, 1 para 5 e random_state = 42 e o dataset original (inteiro)
 
-acurácia: 0.999
 
-recall: 0.804
 
-![ver imagem](classificacao/matriz_conf_2_KNN.png)
-![ver imagem](classificacao/matriz_conf_2_KNN_porcentagem.png)
-![ver imagem](classificacao/console_KNN.png)
 
-:mag_right: [Ver arquivo classification.py](classificacao/classification.py)
+:mag_right: Arquivo com ajuste de limiar e treinamentos: [Ver arquivo classification_v1.py](classificacao/classification_v1.py)
+
+:mag_right: Arquivo para testar os modelos gerados com outros datasets: [Ver arquivo classification_v1.py](classificacao/teste_modelo_datasets.py)
 
 
