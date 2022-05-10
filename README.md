@@ -120,6 +120,24 @@ Usar como número de cluster o número de classes do seu problema (se for binár
 ![ver imagem](classificacao/imagens/creditCard-20-print.png)
 
 
+:arrow_right: Dataset muito desbalanceado: criação de 3 conjuntos reamostrados com 1 amostra fraude para cada 5 não fraude
+
+![ver imagem](classificacao/imagens/codigoResample.png)
+
+
+:arrow_right: Ajuste de limiar: descobrir os melhores parâmetros para Random Forest, KNN e SVM.
+
+RF
+![ver imagem](classificacao/imagens/codigoLimiarRF.png)
+
+KNN
+![ver imagem](classificacao/imagens/codigoLimiarKNN.png)
+
+SVM
+![ver imagem](classificacao/imagens/codigoLimiarSVM.png)
+
+
+
 :arrow_right: KNN
 
 70% treino e 30% testes
