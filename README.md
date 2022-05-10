@@ -189,9 +189,10 @@ Matriz de confusão 80/20 - Conjunto 3
 
 :arrow_right: Novos datasets: 20% (aqueles retirados do dataset original), 1 para 3, 1 para 4, 1 para 5 e random_state = 42 e o dataset original (inteiro)
 
+
 20% - KNN com melhor recall
 
-![ver imagem](classificacao/imagens/mat_conf_20%.png)
+![ver imagem](classificacao/imagens/mat_conf_20por.png)
 
 1 para 3 - KNN com melhor recall
 
@@ -210,6 +211,10 @@ dataset original - KNN com melhor recall
 ![ver imagem](classificacao/imagens/mat_conf_dataset_original.png)
 
 
+:arrow_right: DECISÃO FINAL: KNN (melhor recall -> pega melhor as fraudes)
+
+
+:warning: Apresentação com mais detalhes: [Ver arquivo apresentacao_bruno_farias.pptx](classificacao/apresentacao_bruno_farias.pptx)
 
 :mag_right: Arquivo com ajuste de limiar e treinamentos: [Ver arquivo classification_v1.py](classificacao/classification_v1.py)
 
