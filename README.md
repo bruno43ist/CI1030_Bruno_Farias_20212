@@ -191,6 +191,23 @@ Matriz de confusão 80/20 - Conjunto 3
 
 20% - KNN com melhor recall
 
+![ver imagem](classificacao/imagens/mat_conf_20%.png)
+
+1 para 3 - KNN com melhor recall
+
+![ver imagem](classificacao/imagens/mat_conf_1_3.png)
+
+1 para 4 - KNN com melhor recall
+
+![ver imagem](classificacao/imagens/mat_conf_1_4.png)
+
+1 para 5 e random_state = 42 - KNN com melhor recall
+
+![ver imagem](classificacao/imagens/mat_conf_1_5_42.png)
+
+dataset original - KNN com melhor recall
+
+![ver imagem](classificacao/imagens/mat_conf_dataset_original.png)
 
 
 
