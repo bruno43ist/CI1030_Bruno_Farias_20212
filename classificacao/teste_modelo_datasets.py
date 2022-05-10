@@ -98,31 +98,5 @@ def testar_modelo():
     f1 = f1_score(y_test, y_pred)
     logging.info("f1_score: {}".format(f1))
 
-  #y_pred = knn_80_20_c3.predict(X_test)
-  #logging.info(y_pred)
-
-  #matriz de confusão
-  # cm = confusion_matrix(y_test, y_pred)
-  # logging.info("Confusion Matrix:")
-  # logging.info(cm)
-  # print(cm)
-
-  # #precisao
-  # pr = precision_score(y_test, y_pred)
-  # logging.info("Precision: {}".format(pr))
-
-  # #métrica de acurácia
-  # ac = accuracy_score(y_test,y_pred)
-  # logging.info("Accuracy: {}".format(ac))
-
-  # #recall
-  # rc = recall_score(y_test, y_pred)
-  # logging.info("Recall: {}".format(rc))
-
-  # #f1_score
-  # f1 = f1_score(y_test, y_pred)
-  # logging.info("f1_score: {}".format(f1))
-
-
 if __name__ == "__main__":
   testar_modelo()
