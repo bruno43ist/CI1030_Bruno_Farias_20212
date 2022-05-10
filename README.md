@@ -189,11 +189,13 @@ Matriz de confusão 80/20 - Conjunto 3
 
 :arrow_right: Novos datasets: 20% (aqueles retirados do dataset original), 1 para 3, 1 para 4, 1 para 5 e random_state = 42 e o dataset original (inteiro)
 
+20% - KNN com melhor recall
+
 
 
 
 :mag_right: Arquivo com ajuste de limiar e treinamentos: [Ver arquivo classification_v1.py](classificacao/classification_v1.py)
 
-:mag_right: Arquivo para testar os modelos gerados com outros datasets: [Ver arquivo classification_v1.py](classificacao/teste_modelo_datasets.py)
+:mag_right: Arquivo para testar os modelos gerados com outros datasets: [Ver arquivo teste_modelo_datasets.py](classificacao/teste_modelo_datasets.py)
 
 
